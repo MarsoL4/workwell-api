@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkWell.API", "WorkWell.API\WorkWell.API.csproj", "{85BF62B8-C831-4ADC-8044-29B8C69B273D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkWell.Tests", "WorkWell.Tests\WorkWell.Tests.csproj", "{2CCEB1DF-EF6D-4ED2-A4A5-6898770ABBA8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{85BF62B8-C831-4ADC-8044-29B8C69B273D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85BF62B8-C831-4ADC-8044-29B8C69B273D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85BF62B8-C831-4ADC-8044-29B8C69B273D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85BF62B8-C831-4ADC-8044-29B8C69B273D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CCEB1DF-EF6D-4ED2-A4A5-6898770ABBA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CCEB1DF-EF6D-4ED2-A4A5-6898770ABBA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CCEB1DF-EF6D-4ED2-A4A5-6898770ABBA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CCEB1DF-EF6D-4ED2-A4A5-6898770ABBA8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {74F82D87-300C-41AC-8312-5D97BD79B33E}
+	EndGlobalSection
+EndGlobal

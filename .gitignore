@@ -52,3 +52,27 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.userprefs
+
+# VS temporary DB/cache files
+*.db
+*.db-shm
+*.db-wal
+
+# IDE metadata
+.vscode/
+.idea/
+.history/
+
+# Backup files
+*.backup
+*.back.json
+
+# Auto-generated API test files
+*.http
