@@ -14,4 +14,8 @@
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="9.23.26000" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WorkWell.Domain\WorkWell.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
