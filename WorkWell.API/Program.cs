@@ -1,9 +1,11 @@
+using WorkWell.Application.DependencyInjection;
 using WorkWell.Infrastructure.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add Infrastructure and DbContext (Oracle connection)
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 // Add services to the container and configure Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
