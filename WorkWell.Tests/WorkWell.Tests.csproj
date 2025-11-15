@@ -20,4 +20,10 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Integration\" />
+    <Folder Include="Mocks\" />
+    <Folder Include="Unit\" />
+  </ItemGroup>
+
 </Project>
