@@ -76,3 +76,5 @@ nunit-*.xml
 
 # Auto-generated API test files
 *.http
+/WorkWell.API/appsettings.Development.json
+/WorkWell.API/appsettings.Development.json
