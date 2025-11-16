@@ -15,7 +15,6 @@
     <Folder Include="Services\AvaliacoesEmocionais\" />
     <Folder Include="Services\Enquetes\" />
     <Folder Include="Services\Indicadores\" />
-    <Folder Include="Services\Agenda\" />
     <Folder Include="Services\Notificacoes\" />
     <Folder Include="Services\OmbudMind\" />
   </ItemGroup>
