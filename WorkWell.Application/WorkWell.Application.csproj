@@ -10,7 +10,6 @@
     <Folder Include="Commands\" />
     <Folder Include="Profiles\" />
     <Folder Include="Queries\" />
-    <Folder Include="Services\AtividadesBemEstar\" />
     <Folder Include="Services\AvaliacoesEmocionais\" />
     <Folder Include="Services\Enquetes\" />
     <Folder Include="Services\Indicadores\" />
