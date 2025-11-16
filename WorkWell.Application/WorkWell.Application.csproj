@@ -11,7 +11,6 @@
     <Folder Include="Profiles\" />
     <Folder Include="Queries\" />
     <Folder Include="Services\AvaliacoesEmocionais\" />
-    <Folder Include="Services\Enquetes\" />
     <Folder Include="Services\Indicadores\" />
     <Folder Include="Services\Notificacoes\" />
     <Folder Include="Services\OmbudMind\" />
