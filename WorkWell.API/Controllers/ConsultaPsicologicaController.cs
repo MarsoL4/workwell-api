@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.ApoioPsicologico;
-using WorkWell.Domain.Entities.ApoioPsicologico;
-using WorkWell.Domain.Interfaces.ApoioPsicologico;
+using WorkWell.Application.Services.ApoioPsicologico;
 
 namespace WorkWell.API.Controllers
 {
@@ -9,35 +8,34 @@ namespace WorkWell.API.Controllers
     [Route("api/[controller]")]
     public class ConsultaPsicologicaController : ControllerBase
     {
-        private readonly IConsultaPsicologicaRepository _repository;
+        private readonly IConsultaPsicologicaService _consultaService;
 
-        public ConsultaPsicologicaController(IConsultaPsicologicaRepository repository)
+        public ConsultaPsicologicaController(IConsultaPsicologicaService consultaService)
         {
-            _repository = repository;
+            _consultaService = consultaService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ConsultaPsicologicaDto>>> GetAll()
         {
-            var consultas = await _repository.GetAllAsync();
-            return Ok(consultas.Select(ToDto));
+            var consultas = await _consultaService.GetAllAsync();
+            return Ok(consultas);
         }
 
         [HttpGet("{id:long}")]
         public async Task<ActionResult<ConsultaPsicologicaDto>> GetById(long id)
         {
-            var consulta = await _repository.GetByIdAsync(id);
+            var consulta = await _consultaService.GetByIdAsync(id);
             if (consulta == null)
                 return NotFound();
-            return Ok(ToDto(consulta));
+            return Ok(consulta);
         }
 
         [HttpPost]
         public async Task<ActionResult<long>> Create(ConsultaPsicologicaDto dto)
         {
-            var consulta = FromDto(dto);
-            await _repository.AddAsync(consulta);
-            return CreatedAtAction(nameof(GetById), new { id = consulta.Id }, consulta.Id);
+            var id = await _consultaService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id:long}")]
@@ -46,40 +44,15 @@ namespace WorkWell.API.Controllers
             if (id != dto.Id)
                 return BadRequest("ID da URL e do objeto devem coincidir.");
 
-            var consulta = FromDto(dto);
-            await _repository.UpdateAsync(consulta);
+            await _consultaService.UpdateAsync(dto);
             return NoContent();
         }
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            await _repository.DeleteAsync(id);
+            await _consultaService.DeleteAsync(id);
             return NoContent();
         }
-
-        private static ConsultaPsicologicaDto ToDto(ConsultaPsicologica entidade) =>
-            new()
-            {
-                Id = entidade.Id,
-                FuncionarioId = entidade.FuncionarioId,
-                PsicologoId = entidade.PsicologoId,
-                DataConsulta = entidade.DataConsulta,
-                Tipo = entidade.Tipo,
-                Status = entidade.Status,
-                AnotacoesSigilosas = entidade.AnotacoesSigilosas
-            };
-
-        private static ConsultaPsicologica FromDto(ConsultaPsicologicaDto dto) =>
-            new()
-            {
-                Id = dto.Id,
-                FuncionarioId = dto.FuncionarioId,
-                PsicologoId = dto.PsicologoId,
-                DataConsulta = dto.DataConsulta,
-                Tipo = dto.Tipo,
-                Status = dto.Status,
-                AnotacoesSigilosas = dto.AnotacoesSigilosas
-            };
     }
 }

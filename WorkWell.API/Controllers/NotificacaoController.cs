@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.Notificacoes;
-using WorkWell.Domain.Entities.Notificacoes;
-using WorkWell.Domain.Interfaces.Notificacoes;
+using WorkWell.Application.Services.Notificacoes;
 
 namespace WorkWell.API.Controllers
 {
@@ -9,42 +8,41 @@ namespace WorkWell.API.Controllers
     [Route("api/[controller]")]
     public class NotificacaoController : ControllerBase
     {
-        private readonly INotificacaoRepository _repository;
+        private readonly INotificacaoService _notificacaoService;
 
-        public NotificacaoController(INotificacaoRepository repository)
+        public NotificacaoController(INotificacaoService notificacaoService)
         {
-            _repository = repository;
+            _notificacaoService = notificacaoService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<NotificacaoDto>>> GetAll()
         {
-            var notificacoes = await _repository.GetAllAsync();
-            return Ok(notificacoes.Select(ToDto));
+            var notificacoes = await _notificacaoService.GetAllAsync();
+            return Ok(notificacoes);
         }
 
         [HttpGet("funcionario/{funcionarioId:long}")]
         public async Task<ActionResult<IEnumerable<NotificacaoDto>>> GetByFuncionario(long funcionarioId)
         {
-            var notificacoes = await _repository.GetAllByFuncionarioIdAsync(funcionarioId);
-            return Ok(notificacoes.Select(ToDto));
+            var notificacoes = await _notificacaoService.GetAllByFuncionarioIdAsync(funcionarioId);
+            return Ok(notificacoes);
         }
 
         [HttpGet("{id:long}")]
         public async Task<ActionResult<NotificacaoDto>> GetById(long id)
         {
-            var notificacao = await _repository.GetByIdAsync(id);
+            var notificacao = await _notificacaoService.GetByIdAsync(id);
             if (notificacao == null)
                 return NotFound();
-            return Ok(ToDto(notificacao));
+            return Ok(notificacao);
         }
 
         [HttpPost]
         public async Task<ActionResult<long>> Create(NotificacaoDto dto)
         {
-            var notificacao = FromDto(dto);
-            await _repository.AddAsync(notificacao);
-            return CreatedAtAction(nameof(GetById), new { id = notificacao.Id }, notificacao.Id);
+            var id = await _notificacaoService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id:long}")]
@@ -53,38 +51,15 @@ namespace WorkWell.API.Controllers
             if (id != dto.Id)
                 return BadRequest("ID da URL e do objeto devem coincidir.");
 
-            var notificacao = FromDto(dto);
-            await _repository.UpdateAsync(notificacao);
+            await _notificacaoService.UpdateAsync(dto);
             return NoContent();
         }
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            await _repository.DeleteAsync(id);
+            await _notificacaoService.DeleteAsync(id);
             return NoContent();
         }
-
-        private static NotificacaoDto ToDto(Notificacao entidade) =>
-            new()
-            {
-                Id = entidade.Id,
-                FuncionarioId = entidade.FuncionarioId,
-                Mensagem = entidade.Mensagem,
-                Tipo = entidade.Tipo,
-                Lida = entidade.Lida,
-                DataEnvio = entidade.DataEnvio
-            };
-
-        private static Notificacao FromDto(NotificacaoDto dto) =>
-            new()
-            {
-                Id = dto.Id,
-                FuncionarioId = dto.FuncionarioId,
-                Mensagem = dto.Mensagem,
-                Tipo = dto.Tipo,
-                Lida = dto.Lida,
-                DataEnvio = dto.DataEnvio
-            };
     }
 }

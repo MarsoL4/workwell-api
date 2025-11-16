@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.EmpresaOrganizacao;
-using WorkWell.Domain.Enums.EmpresaOrganizacao;
-using WorkWell.Domain.Interfaces.EmpresaOrganizacao;
+using WorkWell.Application.Services.EmpresaOrganizacao;
 
 namespace WorkWell.API.Controllers
 {
@@ -9,36 +8,34 @@ namespace WorkWell.API.Controllers
     [Route("api/[controller]")]
     public class FuncionarioController : ControllerBase
     {
-        private readonly IFuncionarioRepository _funcionarioRepository;
+        private readonly IFuncionarioService _funcionarioService;
 
-        public FuncionarioController(IFuncionarioRepository funcionarioRepository)
+        public FuncionarioController(IFuncionarioService funcionarioService)
         {
-            _funcionarioRepository = funcionarioRepository;
+            _funcionarioService = funcionarioService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FuncionarioDto>>> GetAll()
         {
-            var funcionarios = await _funcionarioRepository.GetAllAsync();
-            var lista = funcionarios.Select(f => ToDto(f));
-            return Ok(lista);
+            var funcionarios = await _funcionarioService.GetAllAsync();
+            return Ok(funcionarios);
         }
 
         [HttpGet("{id:long}")]
         public async Task<ActionResult<FuncionarioDto>> GetById(long id)
         {
-            var funcionario = await _funcionarioRepository.GetByIdAsync(id);
+            var funcionario = await _funcionarioService.GetByIdAsync(id);
             if (funcionario == null)
                 return NotFound();
-            return Ok(ToDto(funcionario));
+            return Ok(funcionario);
         }
 
         [HttpPost]
         public async Task<ActionResult<long>> Create(FuncionarioDto funcionarioDto)
         {
-            var funcionario = FromDto(funcionarioDto);
-            await _funcionarioRepository.AddAsync(funcionario);
-            return CreatedAtAction(nameof(GetById), new { id = funcionario.Id }, funcionario.Id);
+            var id = await _funcionarioService.CreateAsync(funcionarioDto);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id:long}")]
@@ -47,44 +44,15 @@ namespace WorkWell.API.Controllers
             if (id != funcionarioDto.Id)
                 return BadRequest("ID da URL e do objeto devem coincidir.");
 
-            var funcionario = FromDto(funcionarioDto);
-            await _funcionarioRepository.UpdateAsync(funcionario);
+            await _funcionarioService.UpdateAsync(funcionarioDto);
             return NoContent();
         }
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            await _funcionarioRepository.DeleteAsync(id);
+            await _funcionarioService.DeleteAsync(id);
             return NoContent();
-        }
-
-        private static FuncionarioDto ToDto(WorkWell.Domain.Entities.EmpresaOrganizacao.Funcionario funcionario)
-        {
-            return new FuncionarioDto
-            {
-                Id = funcionario.Id,
-                Nome = funcionario.Nome,
-                Email = funcionario.Email,
-                Cargo = funcionario.Cargo,
-                Ativo = funcionario.Ativo,
-                SetorId = funcionario.SetorId
-            };
-        }
-
-        private static WorkWell.Domain.Entities.EmpresaOrganizacao.Funcionario FromDto(FuncionarioDto dto)
-        {
-            return new WorkWell.Domain.Entities.EmpresaOrganizacao.Funcionario
-            {
-                Id = dto.Id,
-                Nome = dto.Nome,
-                Email = dto.Email,
-                Cargo = dto.Cargo,
-                Ativo = dto.Ativo,
-                SetorId = dto.SetorId,
-                Senha = string.Empty, // Ajuste conforme regras de negócio de senha
-                TokenEmpresa = string.Empty // Ajuste conforme lógica de autenticação
-            };
         }
     }
 }

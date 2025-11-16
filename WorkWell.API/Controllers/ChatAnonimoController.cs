@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.ApoioPsicologico;
-using WorkWell.Domain.Entities.ApoioPsicologico;
-using WorkWell.Domain.Interfaces.ApoioPsicologico;
+using WorkWell.Application.Services.ApoioPsicologico;
 
 namespace WorkWell.API.Controllers
 {
@@ -9,35 +8,34 @@ namespace WorkWell.API.Controllers
     [Route("api/[controller]")]
     public class ChatAnonimoController : ControllerBase
     {
-        private readonly IChatAnonimoRepository _repository;
+        private readonly IChatAnonimoService _chatService;
 
-        public ChatAnonimoController(IChatAnonimoRepository repository)
+        public ChatAnonimoController(IChatAnonimoService chatService)
         {
-            _repository = repository;
+            _chatService = chatService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ChatAnonimoDto>>> GetAll()
         {
-            var chats = await _repository.GetAllAsync();
-            return Ok(chats.Select(ToDto));
+            var chats = await _chatService.GetAllAsync();
+            return Ok(chats);
         }
 
         [HttpGet("{id:long}")]
         public async Task<ActionResult<ChatAnonimoDto>> GetById(long id)
         {
-            var chat = await _repository.GetByIdAsync(id);
+            var chat = await _chatService.GetByIdAsync(id);
             if (chat == null)
                 return NotFound();
-            return Ok(ToDto(chat));
+            return Ok(chat);
         }
 
         [HttpPost]
         public async Task<ActionResult<long>> Create(ChatAnonimoDto dto)
         {
-            var chat = FromDto(dto);
-            await _repository.AddAsync(chat);
-            return CreatedAtAction(nameof(GetById), new { id = chat.Id }, chat.Id);
+            var id = await _chatService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id:long}")]
@@ -46,38 +44,15 @@ namespace WorkWell.API.Controllers
             if (id != dto.Id)
                 return BadRequest("ID da URL e do objeto devem coincidir.");
 
-            var chat = FromDto(dto);
-            await _repository.UpdateAsync(chat);
+            await _chatService.UpdateAsync(dto);
             return NoContent();
         }
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            await _repository.DeleteAsync(id);
+            await _chatService.DeleteAsync(id);
             return NoContent();
         }
-
-        private static ChatAnonimoDto ToDto(ChatAnonimo entidade) =>
-            new()
-            {
-                Id = entidade.Id,
-                RemetenteId = entidade.RemetenteId,
-                PsicologoId = entidade.PsicologoId,
-                Mensagem = entidade.Mensagem,
-                DataEnvio = entidade.DataEnvio,
-                Anonimo = entidade.Anonimo
-            };
-
-        private static ChatAnonimo FromDto(ChatAnonimoDto dto) =>
-            new()
-            {
-                Id = dto.Id,
-                RemetenteId = dto.RemetenteId,
-                PsicologoId = dto.PsicologoId,
-                Mensagem = dto.Mensagem,
-                DataEnvio = dto.DataEnvio,
-                Anonimo = dto.Anonimo
-            };
     }
 }

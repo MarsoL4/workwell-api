@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.AvaliacoesEmocionais;
-using WorkWell.Domain.Entities.AvaliacoesEmocionais;
-using WorkWell.Domain.Interfaces.AvaliacoesEmocionais;
+using WorkWell.Application.Services.AvaliacoesEmocionais;
 
 namespace WorkWell.API.Controllers
 {
@@ -9,35 +8,34 @@ namespace WorkWell.API.Controllers
     [Route("api/[controller]")]
     public class AvaliacaoProfundaController : ControllerBase
     {
-        private readonly IAvaliacaoProfundaRepository _repository;
+        private readonly IAvaliacaoProfundaService _avaliacaoService;
 
-        public AvaliacaoProfundaController(IAvaliacaoProfundaRepository repository)
+        public AvaliacaoProfundaController(IAvaliacaoProfundaService avaliacaoService)
         {
-            _repository = repository;
+            _avaliacaoService = avaliacaoService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AvaliacaoProfundaDto>>> GetAll()
         {
-            var registros = await _repository.GetAllAsync();
-            return Ok(registros.Select(ToDto));
+            var registros = await _avaliacaoService.GetAllAsync();
+            return Ok(registros);
         }
 
         [HttpGet("{id:long}")]
         public async Task<ActionResult<AvaliacaoProfundaDto>> GetById(long id)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _avaliacaoService.GetByIdAsync(id);
             if (entity == null)
                 return NotFound();
-            return Ok(ToDto(entity));
+            return Ok(entity);
         }
 
         [HttpPost]
         public async Task<ActionResult<long>> Create(AvaliacaoProfundaDto dto)
         {
-            var entity = FromDto(dto);
-            await _repository.AddAsync(entity);
-            return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity.Id);
+            var id = await _avaliacaoService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id:long}")]
@@ -46,38 +44,15 @@ namespace WorkWell.API.Controllers
             if (id != dto.Id)
                 return BadRequest("ID da URL e do objeto devem coincidir.");
 
-            var entity = FromDto(dto);
-            await _repository.UpdateAsync(entity);
+            await _avaliacaoService.UpdateAsync(dto);
             return NoContent();
         }
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            await _repository.DeleteAsync(id);
+            await _avaliacaoService.DeleteAsync(id);
             return NoContent();
         }
-
-        private static AvaliacaoProfundaDto ToDto(AvaliacaoProfunda entidade) =>
-            new()
-            {
-                Id = entidade.Id,
-                FuncionarioId = entidade.FuncionarioId,
-                Gad7Score = entidade.Gad7Score,
-                Phq9Score = entidade.Phq9Score,
-                Interpretacao = entidade.Interpretacao,
-                DataRegistro = entidade.DataRegistro
-            };
-
-        private static AvaliacaoProfunda FromDto(AvaliacaoProfundaDto dto) =>
-            new()
-            {
-                Id = dto.Id,
-                FuncionarioId = dto.FuncionarioId,
-                Gad7Score = dto.Gad7Score,
-                Phq9Score = dto.Phq9Score,
-                Interpretacao = dto.Interpretacao,
-                DataRegistro = dto.DataRegistro
-            };
     }
 }

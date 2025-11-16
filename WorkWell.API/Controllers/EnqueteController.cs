@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.Enquetes;
-using WorkWell.Domain.Entities.Enquetes;
-using WorkWell.Domain.Interfaces.Enquetes;
+using WorkWell.Application.Services.Enquetes;
 
 namespace WorkWell.API.Controllers
 {
@@ -9,37 +8,34 @@ namespace WorkWell.API.Controllers
     [Route("api/[controller]")]
     public class EnqueteController : ControllerBase
     {
-        private readonly IEnqueteRepository _enqueteRepository;
-        private readonly IRespostaEnqueteRepository _respostaRepository;
+        private readonly IEnqueteService _enqueteService;
 
-        public EnqueteController(IEnqueteRepository enqueteRepository, IRespostaEnqueteRepository respostaRepository)
+        public EnqueteController(IEnqueteService enqueteService)
         {
-            _enqueteRepository = enqueteRepository;
-            _respostaRepository = respostaRepository;
+            _enqueteService = enqueteService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EnqueteDto>>> GetAll()
         {
-            var enquetes = await _enqueteRepository.GetAllAsync();
-            return Ok(enquetes.Select(ToDto));
+            var enquetes = await _enqueteService.GetAllAsync();
+            return Ok(enquetes);
         }
 
         [HttpGet("{id:long}")]
         public async Task<ActionResult<EnqueteDto>> GetById(long id)
         {
-            var enquete = await _enqueteRepository.GetByIdAsync(id);
+            var enquete = await _enqueteService.GetByIdAsync(id);
             if (enquete == null)
                 return NotFound();
-            return Ok(ToDto(enquete));
+            return Ok(enquete);
         }
 
         [HttpPost]
         public async Task<ActionResult<long>> Create(EnqueteDto dto)
         {
-            var enquete = FromDto(dto);
-            await _enqueteRepository.AddAsync(enquete);
-            return CreatedAtAction(nameof(GetById), new { id = enquete.Id }, enquete.Id);
+            var id = await _enqueteService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id:long}")]
@@ -47,72 +43,29 @@ namespace WorkWell.API.Controllers
         {
             if (id != dto.Id)
                 return BadRequest("ID da URL e do objeto devem coincidir.");
-            var enquete = FromDto(dto);
-            await _enqueteRepository.UpdateAsync(enquete);
+            await _enqueteService.UpdateAsync(dto);
             return NoContent();
         }
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            await _enqueteRepository.DeleteAsync(id);
+            await _enqueteService.DeleteAsync(id);
             return NoContent();
         }
-
-        // Rotas de resposta de enquete
 
         [HttpGet("{enqueteId:long}/respostas")]
         public async Task<ActionResult<IEnumerable<RespostaEnqueteDto>>> GetRespostas(long enqueteId)
         {
-            var respostas = await _respostaRepository.GetAllByEnqueteIdAsync(enqueteId);
-            return Ok(respostas.Select(ToDto));
+            var respostas = await _enqueteService.GetRespostasAsync(enqueteId);
+            return Ok(respostas);
         }
 
         [HttpPost("{enqueteId:long}/respostas")]
         public async Task<ActionResult<long>> AdicionarResposta(long enqueteId, RespostaEnqueteDto dto)
         {
-            var resposta = FromDto(dto);
-            resposta.EnqueteId = enqueteId;
-            await _respostaRepository.AddAsync(resposta);
-            return Ok(resposta.Id);
+            var id = await _enqueteService.AdicionarRespostaAsync(enqueteId, dto);
+            return Ok(id);
         }
-
-        private static EnqueteDto ToDto(Enquete entidade) =>
-            new()
-            {
-                Id = entidade.Id,
-                EmpresaId = entidade.EmpresaId,
-                Pergunta = entidade.Pergunta,
-                DataCriacao = entidade.DataCriacao,
-                Ativa = entidade.Ativa
-            };
-
-        private static Enquete FromDto(EnqueteDto dto) =>
-            new()
-            {
-                Id = dto.Id,
-                EmpresaId = dto.EmpresaId,
-                Pergunta = dto.Pergunta,
-                DataCriacao = dto.DataCriacao,
-                Ativa = dto.Ativa
-            };
-
-        private static RespostaEnqueteDto ToDto(RespostaEnquete entidade) =>
-            new()
-            {
-                Id = entidade.Id,
-                EnqueteId = entidade.EnqueteId,
-                FuncionarioId = entidade.FuncionarioId,
-                Resposta = entidade.Resposta
-            };
-
-        private static RespostaEnquete FromDto(RespostaEnqueteDto dto) =>
-            new()
-            {
-                Id = dto.Id,
-                EnqueteId = dto.EnqueteId,
-                FuncionarioId = dto.FuncionarioId,
-                Resposta = dto.Resposta
-            };
     }
 }

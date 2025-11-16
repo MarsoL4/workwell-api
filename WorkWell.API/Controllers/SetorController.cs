@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.EmpresaOrganizacao;
-using WorkWell.Domain.Entities.EmpresaOrganizacao;
-using WorkWell.Domain.Interfaces.EmpresaOrganizacao;
+using WorkWell.Application.Services.EmpresaOrganizacao;
 
 namespace WorkWell.API.Controllers
 {
@@ -9,36 +8,34 @@ namespace WorkWell.API.Controllers
     [Route("api/[controller]")]
     public class SetorController : ControllerBase
     {
-        private readonly ISetorRepository _setorRepository;
+        private readonly ISetorService _setorService;
 
-        public SetorController(ISetorRepository setorRepository)
+        public SetorController(ISetorService setorService)
         {
-            _setorRepository = setorRepository;
+            _setorService = setorService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SetorDto>>> GetAll()
         {
-            var setores = await _setorRepository.GetAllAsync();
-            var lista = setores.Select(s => ToDto(s));
-            return Ok(lista);
+            var setores = await _setorService.GetAllAsync();
+            return Ok(setores);
         }
 
         [HttpGet("{id:long}")]
         public async Task<ActionResult<SetorDto>> GetById(long id)
         {
-            var setor = await _setorRepository.GetByIdAsync(id);
+            var setor = await _setorService.GetByIdAsync(id);
             if (setor == null)
                 return NotFound();
-            return Ok(ToDto(setor));
+            return Ok(setor);
         }
 
         [HttpPost]
         public async Task<ActionResult<long>> Create(SetorDto setorDto)
         {
-            var setor = FromDto(setorDto);
-            await _setorRepository.AddAsync(setor);
-            return CreatedAtAction(nameof(GetById), new { id = setor.Id }, setor.Id);
+            var id = await _setorService.CreateAsync(setorDto);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id:long}")]
@@ -47,36 +44,15 @@ namespace WorkWell.API.Controllers
             if (id != setorDto.Id)
                 return BadRequest("ID da URL e do objeto devem coincidir.");
 
-            var setor = FromDto(setorDto);
-            await _setorRepository.UpdateAsync(setor);
+            await _setorService.UpdateAsync(setorDto);
             return NoContent();
         }
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            await _setorRepository.DeleteAsync(id);
+            await _setorService.DeleteAsync(id);
             return NoContent();
-        }
-
-        private static SetorDto ToDto(Setor setor)
-        {
-            return new SetorDto
-            {
-                Id = setor.Id,
-                Nome = setor.Nome,
-                EmpresaId = setor.EmpresaId
-            };
-        }
-
-        private static Setor FromDto(SetorDto dto)
-        {
-            return new Setor
-            {
-                Id = dto.Id,
-                Nome = dto.Nome,
-                EmpresaId = dto.EmpresaId
-            };
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.ApoioPsicologico;
-using WorkWell.Domain.Entities.ApoioPsicologico;
-using WorkWell.Domain.Interfaces.ApoioPsicologico;
+using WorkWell.Application.Services.ApoioPsicologico;
 
 namespace WorkWell.API.Controllers
 {
@@ -9,35 +8,34 @@ namespace WorkWell.API.Controllers
     [Route("api/[controller]")]
     public class SOSemergenciaController : ControllerBase
     {
-        private readonly ISOSemergenciaRepository _repository;
+        private readonly ISOSemergenciaService _sosService;
 
-        public SOSemergenciaController(ISOSemergenciaRepository repository)
+        public SOSemergenciaController(ISOSemergenciaService sosService)
         {
-            _repository = repository;
+            _sosService = sosService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SOSemergenciaDto>>> GetAll()
         {
-            var registros = await _repository.GetAllAsync();
-            return Ok(registros.Select(ToDto));
+            var registros = await _sosService.GetAllAsync();
+            return Ok(registros);
         }
 
         [HttpGet("{id:long}")]
         public async Task<ActionResult<SOSemergenciaDto>> GetById(long id)
         {
-            var entidade = await _repository.GetByIdAsync(id);
+            var entidade = await _sosService.GetByIdAsync(id);
             if (entidade == null)
                 return NotFound();
-            return Ok(ToDto(entidade));
+            return Ok(entidade);
         }
 
         [HttpPost]
         public async Task<ActionResult<long>> Create(SOSemergenciaDto dto)
         {
-            var entidade = FromDto(dto);
-            await _repository.AddAsync(entidade);
-            return CreatedAtAction(nameof(GetById), new { id = entidade.Id }, entidade.Id);
+            var id = await _sosService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id:long}")]
@@ -46,36 +44,15 @@ namespace WorkWell.API.Controllers
             if (id != dto.Id)
                 return BadRequest("ID da URL e do objeto devem coincidir.");
 
-            var entidade = FromDto(dto);
-            await _repository.UpdateAsync(entidade);
+            await _sosService.UpdateAsync(dto);
             return NoContent();
         }
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            await _repository.DeleteAsync(id);
+            await _sosService.DeleteAsync(id);
             return NoContent();
         }
-
-        private static SOSemergenciaDto ToDto(SOSemergencia entidade) =>
-            new()
-            {
-                Id = entidade.Id,
-                FuncionarioId = entidade.FuncionarioId,
-                DataAcionamento = entidade.DataAcionamento,
-                Tipo = entidade.Tipo,
-                PsicologoNotificado = entidade.PsicologoNotificado
-            };
-
-        private static SOSemergencia FromDto(SOSemergenciaDto dto) =>
-            new()
-            {
-                Id = dto.Id,
-                FuncionarioId = dto.FuncionarioId,
-                DataAcionamento = dto.DataAcionamento,
-                Tipo = dto.Tipo,
-                PsicologoNotificado = dto.PsicologoNotificado
-            };
     }
 }

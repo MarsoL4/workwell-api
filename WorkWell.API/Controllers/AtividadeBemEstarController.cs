@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.AtividadesBemEstar;
-using WorkWell.Domain.Entities.AtividadesBemEstar;
-using WorkWell.Domain.Interfaces.AtividadesBemEstar;
+using WorkWell.Application.Services.AtividadesBemEstar;
 
 namespace WorkWell.API.Controllers
 {
@@ -9,37 +8,34 @@ namespace WorkWell.API.Controllers
     [Route("api/[controller]")]
     public class AtividadeBemEstarController : ControllerBase
     {
-        private readonly IAtividadeBemEstarRepository _atividadeRepository;
-        private readonly IParticipacaoAtividadeRepository _participacaoRepository;
+        private readonly IAtividadeBemEstarService _atividadeService;
 
-        public AtividadeBemEstarController(IAtividadeBemEstarRepository atividadeRepository, IParticipacaoAtividadeRepository participacaoRepository)
+        public AtividadeBemEstarController(IAtividadeBemEstarService atividadeService)
         {
-            _atividadeRepository = atividadeRepository;
-            _participacaoRepository = participacaoRepository;
+            _atividadeService = atividadeService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AtividadeBemEstarDto>>> GetAll()
         {
-            var atividades = await _atividadeRepository.GetAllAsync();
-            return Ok(atividades.Select(ToDto));
+            var atividades = await _atividadeService.GetAllAsync();
+            return Ok(atividades);
         }
 
         [HttpGet("{id:long}")]
         public async Task<ActionResult<AtividadeBemEstarDto>> GetById(long id)
         {
-            var atividade = await _atividadeRepository.GetByIdAsync(id);
+            var atividade = await _atividadeService.GetByIdAsync(id);
             if (atividade == null)
                 return NotFound();
-            return Ok(ToDto(atividade));
+            return Ok(atividade);
         }
 
         [HttpPost]
         public async Task<ActionResult<long>> Create(AtividadeBemEstarDto dto)
         {
-            var atividade = FromDto(dto);
-            await _atividadeRepository.AddAsync(atividade);
-            return CreatedAtAction(nameof(GetById), new { id = atividade.Id }, atividade.Id);
+            var id = await _atividadeService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id:long}")]
@@ -48,82 +44,29 @@ namespace WorkWell.API.Controllers
             if (id != dto.Id)
                 return BadRequest("ID da URL e do objeto devem coincidir.");
 
-            var atividade = FromDto(dto);
-            await _atividadeRepository.UpdateAsync(atividade);
+            await _atividadeService.UpdateAsync(dto);
             return NoContent();
         }
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            await _atividadeRepository.DeleteAsync(id);
+            await _atividadeService.DeleteAsync(id);
             return NoContent();
         }
-
-        // Participação rotas
 
         [HttpGet("{atividadeId:long}/participacoes")]
         public async Task<ActionResult<IEnumerable<ParticipacaoAtividadeDto>>> GetParticipacoes(long atividadeId)
         {
-            var participacoes = await _participacaoRepository.GetAllByAtividadeIdAsync(atividadeId);
-            return Ok(participacoes.Select(ToDto));
+            var participacoes = await _atividadeService.GetParticipacoesAsync(atividadeId);
+            return Ok(participacoes);
         }
 
         [HttpPost("{atividadeId:long}/participacoes")]
         public async Task<ActionResult<long>> Participar(long atividadeId, ParticipacaoAtividadeDto dto)
         {
-            var part = FromDto(dto);
-            part.AtividadeId = atividadeId;
-            await _participacaoRepository.AddAsync(part);
-            return Ok(part.Id);
+            var id = await _atividadeService.AdicionarParticipacaoAsync(atividadeId, dto);
+            return Ok(id);
         }
-
-        // Conversion helpers
-
-        private static AtividadeBemEstarDto ToDto(AtividadeBemEstar entidade) =>
-            new()
-            {
-                Id = entidade.Id,
-                EmpresaId = entidade.EmpresaId,
-                Tipo = entidade.Tipo,
-                Titulo = entidade.Titulo,
-                Descricao = entidade.Descricao,
-                DataInicio = entidade.DataInicio,
-                DataFim = entidade.DataFim,
-                SetorAlvoId = entidade.SetorAlvoId
-            };
-
-        private static AtividadeBemEstar FromDto(AtividadeBemEstarDto dto) =>
-            new()
-            {
-                Id = dto.Id,
-                EmpresaId = dto.EmpresaId,
-                Tipo = dto.Tipo,
-                Titulo = dto.Titulo,
-                Descricao = dto.Descricao,
-                DataInicio = dto.DataInicio,
-                DataFim = dto.DataFim,
-                SetorAlvoId = dto.SetorAlvoId
-            };
-
-        private static ParticipacaoAtividadeDto ToDto(ParticipacaoAtividade entidade) =>
-            new()
-            {
-                Id = entidade.Id,
-                FuncionarioId = entidade.FuncionarioId,
-                AtividadeId = entidade.AtividadeId,
-                Participou = entidade.Participou,
-                DataParticipacao = entidade.DataParticipacao
-            };
-
-        private static ParticipacaoAtividade FromDto(ParticipacaoAtividadeDto dto) =>
-            new()
-            {
-                Id = dto.Id,
-                FuncionarioId = dto.FuncionarioId,
-                AtividadeId = dto.AtividadeId,
-                Participou = dto.Participou,
-                DataParticipacao = dto.DataParticipacao
-            };
     }
 }
