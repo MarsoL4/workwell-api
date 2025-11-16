@@ -10,7 +10,6 @@
     <Folder Include="Commands\" />
     <Folder Include="Profiles\" />
     <Folder Include="Queries\" />
-    <Folder Include="Services\Notificacoes\" />
     <Folder Include="Services\OmbudMind\" />
   </ItemGroup>
 
