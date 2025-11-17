@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.ApoioPsicologico;
 using WorkWell.Application.Services.ApoioPsicologico;
+using WorkWell.Application.DTOs.Paginacao;
 
 namespace WorkWell.API.Controllers
 {
@@ -17,10 +18,10 @@ namespace WorkWell.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PsicologoDto>>> GetAll()
+        public async Task<ActionResult<PagedResultDto<PsicologoDto>>> GetAllPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var psicologos = await _psicologoService.GetAllAsync();
-            return Ok(psicologos);
+            var result = await _psicologoService.GetAllPagedAsync(page, pageSize);
+            return Ok(result);
         }
 
         [HttpGet("{id:long}")]

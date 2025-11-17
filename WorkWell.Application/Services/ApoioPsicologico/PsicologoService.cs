@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using WorkWell.Application.DTOs.ApoioPsicologico;
 using WorkWell.Domain.Interfaces.ApoioPsicologico;
 using WorkWell.Domain.Entities.ApoioPsicologico;
+using WorkWell.Application.DTOs.Paginacao;
+using System.Linq;
 
 namespace WorkWell.Application.Services.ApoioPsicologico
 {
@@ -21,6 +23,18 @@ namespace WorkWell.Application.Services.ApoioPsicologico
             var dtos = new List<PsicologoDto>();
             foreach (var m in models) dtos.Add(ToDto(m));
             return dtos;
+        }
+
+        public async Task<PagedResultDto<PsicologoDto>> GetAllPagedAsync(int page, int pageSize)
+        {
+            var (items, total) = await _repo.GetAllPagedAsync(page, pageSize);
+            return new PagedResultDto<PsicologoDto>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = total,
+                Items = items.Select(ToDto).ToList()
+            };
         }
 
         public async Task<PsicologoDto?> GetByIdAsync(long id)

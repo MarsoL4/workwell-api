@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WorkWell.Domain.Entities.EmpresaOrganizacao;
 using WorkWell.Domain.Interfaces.EmpresaOrganizacao;
 using WorkWell.Infrastructure.Persistence;
+using System.Linq;
 
 namespace WorkWell.Infrastructure.Repositories.EmpresaOrganizacao
 {
@@ -24,6 +25,17 @@ namespace WorkWell.Infrastructure.Repositories.EmpresaOrganizacao
         public async Task<IEnumerable<Setor>> GetAllAsync()
         {
             return await _context.Setores.ToListAsync();
+        }
+
+        public async Task<(IEnumerable<Setor> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize)
+        {
+            var query = _context.Setores.AsQueryable();
+            var total = await query.CountAsync();
+            var items = await query
+                .OrderBy(s => s.Id)
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .ToListAsync();
+            return (items, total);
         }
 
         public async Task AddAsync(Setor setor)

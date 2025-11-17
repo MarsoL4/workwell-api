@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using WorkWell.Domain.Entities.EmpresaOrganizacao;
 using WorkWell.Domain.Interfaces.EmpresaOrganizacao;
 using WorkWell.Infrastructure.Persistence;
+using WorkWell.Infrastructure.Extensions;
+using System.Linq;
 
 namespace WorkWell.Infrastructure.Repositories.EmpresaOrganizacao
 {
@@ -24,6 +26,17 @@ namespace WorkWell.Infrastructure.Repositories.EmpresaOrganizacao
         public async Task<IEnumerable<Funcionario>> GetAllAsync()
         {
             return await _context.Funcionarios.ToListAsync();
+        }
+
+        public async Task<(IEnumerable<Funcionario> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize)
+        {
+            var query = _context.Funcionarios.AsQueryable();
+            var total = await query.CountAsync();
+            var items = await query
+                .OrderBy(f => f.Id)
+                .Paginate(page, pageSize)
+                .ToListAsync();
+            return (items, total);
         }
 
         public async Task AddAsync(Funcionario funcionario)

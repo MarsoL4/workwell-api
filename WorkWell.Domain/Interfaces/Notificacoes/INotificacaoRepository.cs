@@ -8,6 +8,7 @@ namespace WorkWell.Domain.Interfaces.Notificacoes
     {
         Task<Notificacao?> GetByIdAsync(long id);
         Task<IEnumerable<Notificacao>> GetAllAsync();
+        Task<(IEnumerable<Notificacao> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize); // NOVO
         Task<IEnumerable<Notificacao>> GetAllByFuncionarioIdAsync(long funcionarioId);
         Task AddAsync(Notificacao notificacao);
         Task UpdateAsync(Notificacao notificacao);

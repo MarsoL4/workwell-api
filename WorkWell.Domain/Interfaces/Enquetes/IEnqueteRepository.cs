@@ -8,6 +8,7 @@ namespace WorkWell.Domain.Interfaces.Enquetes
     {
         Task<Enquete?> GetByIdAsync(long id);
         Task<IEnumerable<Enquete>> GetAllAsync();
+        Task<(IEnumerable<Enquete> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize); // NOVO
         Task AddAsync(Enquete enquete);
         Task UpdateAsync(Enquete enquete);
         Task DeleteAsync(long id);

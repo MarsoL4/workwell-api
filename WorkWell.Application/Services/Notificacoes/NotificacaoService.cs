@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using WorkWell.Application.DTOs.Notificacoes;
+using WorkWell.Application.DTOs.Paginacao;
 using WorkWell.Domain.Entities.Notificacoes;
 using WorkWell.Domain.Interfaces.Notificacoes;
 
@@ -20,6 +21,18 @@ namespace WorkWell.Application.Services.Notificacoes
         {
             var list = await _repository.GetAllAsync();
             return list.Select(ToDto);
+        }
+
+        public async Task<PagedResultDto<NotificacaoDto>> GetAllPagedAsync(int page, int pageSize)
+        {
+            var (items, total) = await _repository.GetAllPagedAsync(page, pageSize);
+            return new PagedResultDto<NotificacaoDto>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = total,
+                Items = items.Select(ToDto).ToList()
+            };
         }
 
         public async Task<NotificacaoDto?> GetByIdAsync(long id)

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WorkWell.Domain.Entities.Indicadores;
 using WorkWell.Domain.Interfaces.Indicadores;
 using WorkWell.Infrastructure.Persistence;
+using System.Linq;
 
 namespace WorkWell.Infrastructure.Repositories.Indicadores
 {
@@ -28,6 +29,17 @@ namespace WorkWell.Infrastructure.Repositories.Indicadores
             return await _context.IndicadoresEmpresa
                 .Include(x => x.AdesaoPorSetor)
                 .ToListAsync();
+        }
+
+        public async Task<(IEnumerable<IndicadoresEmpresa> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize)
+        {
+            var query = _context.IndicadoresEmpresa.Include(x => x.AdesaoPorSetor).AsQueryable();
+            var total = await query.CountAsync();
+            var items = await query
+                .OrderBy(x => x.Id)
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .ToListAsync();
+            return (items, total);
         }
 
         public async Task AddAsync(IndicadoresEmpresa indicadores)

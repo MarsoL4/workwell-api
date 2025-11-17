@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.Indicadores;
 using WorkWell.Application.Services.Indicadores;
+using WorkWell.Application.DTOs.Paginacao;
 
 namespace WorkWell.API.Controllers
 {
@@ -17,10 +18,10 @@ namespace WorkWell.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<IndicadoresEmpresaDto>>> GetAll()
+        public async Task<ActionResult<PagedResultDto<IndicadoresEmpresaDto>>> GetAllPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var list = await _indicadoresService.GetAllAsync();
-            return Ok(list);
+            var result = await _indicadoresService.GetAllPagedAsync(page, pageSize);
+            return Ok(result);
         }
 
         [HttpGet("{id:long}")]

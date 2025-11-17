@@ -8,6 +8,7 @@ namespace WorkWell.Domain.Interfaces.EmpresaOrganizacao
     {
         Task<Setor?> GetByIdAsync(long id);
         Task<IEnumerable<Setor>> GetAllAsync();
+        Task<(IEnumerable<Setor> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize); // NOVO
         Task AddAsync(Setor setor);
         Task UpdateAsync(Setor setor);
         Task DeleteAsync(long id);

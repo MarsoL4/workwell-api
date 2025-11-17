@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using WorkWell.Application.DTOs.Indicadores;
+using WorkWell.Application.DTOs.Paginacao;
 using WorkWell.Domain.Entities.Indicadores;
 using WorkWell.Domain.Interfaces.Indicadores;
 
@@ -20,6 +21,18 @@ namespace WorkWell.Application.Services.Indicadores
         {
             var list = await _repository.GetAllAsync();
             return list.Select(ToDto);
+        }
+
+        public async Task<PagedResultDto<IndicadoresEmpresaDto>> GetAllPagedAsync(int page, int pageSize)
+        {
+            var (items, total) = await _repository.GetAllPagedAsync(page, pageSize);
+            return new PagedResultDto<IndicadoresEmpresaDto>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = total,
+                Items = items.Select(ToDto).ToList()
+            };
         }
 
         public async Task<IndicadoresEmpresaDto?> GetByIdAsync(long id)

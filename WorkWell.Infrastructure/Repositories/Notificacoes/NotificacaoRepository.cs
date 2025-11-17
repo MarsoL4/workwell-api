@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WorkWell.Domain.Entities.Notificacoes;
 using WorkWell.Domain.Interfaces.Notificacoes;
 using WorkWell.Infrastructure.Persistence;
+using System.Linq;
 
 namespace WorkWell.Infrastructure.Repositories.Notificacoes
 {
@@ -24,6 +25,17 @@ namespace WorkWell.Infrastructure.Repositories.Notificacoes
         public async Task<IEnumerable<Notificacao>> GetAllAsync()
         {
             return await _context.Notificacoes.ToListAsync();
+        }
+
+        public async Task<(IEnumerable<Notificacao> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize)
+        {
+            var query = _context.Notificacoes.AsQueryable();
+            var total = await query.CountAsync();
+            var items = await query
+                .OrderBy(n => n.Id)
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .ToListAsync();
+            return (items, total);
         }
 
         public async Task<IEnumerable<Notificacao>> GetAllByFuncionarioIdAsync(long funcionarioId)

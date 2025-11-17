@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.EmpresaOrganizacao;
 using WorkWell.Application.Services.EmpresaOrganizacao;
+using WorkWell.Application.DTOs.Paginacao;
 
 namespace WorkWell.API.Controllers
 {
@@ -17,10 +18,10 @@ namespace WorkWell.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmpresaDto>>> GetAll()
+        public async Task<ActionResult<PagedResultDto<EmpresaDto>>> GetAllPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var empresas = await _empresaService.GetAllAsync();
-            return Ok(empresas);
+            var result = await _empresaService.GetAllPagedAsync(page, pageSize);
+            return Ok(result);
         }
 
         [HttpGet("{id:long}")]

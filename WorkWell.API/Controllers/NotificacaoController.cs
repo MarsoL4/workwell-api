@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkWell.Application.DTOs.Notificacoes;
 using WorkWell.Application.Services.Notificacoes;
+using WorkWell.Application.DTOs.Paginacao;
 
 namespace WorkWell.API.Controllers
 {
@@ -17,10 +18,10 @@ namespace WorkWell.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<NotificacaoDto>>> GetAll()
+        public async Task<ActionResult<PagedResultDto<NotificacaoDto>>> GetAllPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var notificacoes = await _notificacaoService.GetAllAsync();
-            return Ok(notificacoes);
+            var result = await _notificacaoService.GetAllPagedAsync(page, pageSize);
+            return Ok(result);
         }
 
         [HttpGet("funcionario/{funcionarioId:long}")]

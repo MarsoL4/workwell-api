@@ -8,6 +8,7 @@ namespace WorkWell.Domain.Interfaces.Indicadores
     {
         Task<IndicadoresEmpresa?> GetByIdAsync(long id);
         Task<IEnumerable<IndicadoresEmpresa>> GetAllAsync();
+        Task<(IEnumerable<IndicadoresEmpresa> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize); // PAGINAÇÃO
         Task AddAsync(IndicadoresEmpresa indicadores);
         Task UpdateAsync(IndicadoresEmpresa indicadores);
         Task DeleteAsync(long id);

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using WorkWell.Application.DTOs.EmpresaOrganizacao;
 using WorkWell.Domain.Entities.EmpresaOrganizacao;
 using WorkWell.Domain.Interfaces.EmpresaOrganizacao;
+using WorkWell.Application.DTOs.Paginacao;
+using System.Linq;
 
 namespace WorkWell.Application.Services.EmpresaOrganizacao
 {
@@ -25,6 +27,18 @@ namespace WorkWell.Application.Services.EmpresaOrganizacao
                 dtos.Add(ToDto(empresa));
             }
             return dtos;
+        }
+
+        public async Task<PagedResultDto<EmpresaDto>> GetAllPagedAsync(int page, int pageSize)
+        {
+            var (items, total) = await _empresaRepository.GetAllPagedAsync(page, pageSize);
+            return new PagedResultDto<EmpresaDto>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = total,
+                Items = items.Select(ToDto).ToList()
+            };
         }
 
         public async Task<EmpresaDto?> GetByIdAsync(long id)

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WorkWell.Domain.Entities.ApoioPsicologico;
 using WorkWell.Domain.Interfaces.ApoioPsicologico;
 using WorkWell.Infrastructure.Persistence;
+using System.Linq;
 
 namespace WorkWell.Infrastructure.Repositories.ApoioPsicologico
 {
@@ -24,6 +25,17 @@ namespace WorkWell.Infrastructure.Repositories.ApoioPsicologico
         public async Task<IEnumerable<Psicologo>> GetAllAsync()
         {
             return await _context.Psicologos.ToListAsync();
+        }
+
+        public async Task<(IEnumerable<Psicologo> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize)
+        {
+            var query = _context.Psicologos.AsQueryable();
+            var total = await query.CountAsync();
+            var items = await query
+                .OrderBy(p => p.Id)
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .ToListAsync();
+            return (items, total);
         }
 
         public async Task AddAsync(Psicologo psicologo)

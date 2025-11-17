@@ -8,6 +8,7 @@ namespace WorkWell.Domain.Interfaces.EmpresaOrganizacao
     {
         Task<Funcionario?> GetByIdAsync(long id);
         Task<IEnumerable<Funcionario>> GetAllAsync();
+        Task<(IEnumerable<Funcionario> Items, int TotalCount)> GetAllPagedAsync(int page, int pageSize); // PAGINAÇÃO
         Task AddAsync(Funcionario funcionario);
         Task UpdateAsync(Funcionario funcionario);
         Task DeleteAsync(long id);

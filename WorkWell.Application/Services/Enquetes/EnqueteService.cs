@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using WorkWell.Application.DTOs.Enquetes;
+using WorkWell.Application.DTOs.Paginacao;
 using WorkWell.Domain.Entities.Enquetes;
 using WorkWell.Domain.Interfaces.Enquetes;
 
@@ -20,6 +21,18 @@ namespace WorkWell.Application.Services.Enquetes
 
         public async Task<IEnumerable<EnqueteDto>> GetAllAsync()
             => (await _enqueteRepository.GetAllAsync()).Select(ToDto);
+
+        public async Task<PagedResultDto<EnqueteDto>> GetAllPagedAsync(int page, int pageSize)
+        {
+            var (items, total) = await _enqueteRepository.GetAllPagedAsync(page, pageSize);
+            return new PagedResultDto<EnqueteDto>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = total,
+                Items = items.Select(ToDto).ToList()
+            };
+        }
 
         public async Task<EnqueteDto?> GetByIdAsync(long id)
         {
