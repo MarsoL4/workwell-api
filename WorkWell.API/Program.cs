@@ -1,3 +1,4 @@
+using WorkWell.API.Extensions;
 using WorkWell.Application.DependencyInjection;
 using WorkWell.Infrastructure.Configurations;
 
@@ -10,6 +11,7 @@ builder.Services.AddApplication();
 // Add services to the container and configure Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddWorkWellApiVersioning();
 
 var app = builder.Build();
 
