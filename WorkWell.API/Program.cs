@@ -1,4 +1,5 @@
 using WorkWell.API.Extensions;
+using WorkWell.API.HealthChecks;
 using WorkWell.Application.DependencyInjection;
 using WorkWell.Infrastructure.Configurations;
 
@@ -12,6 +13,7 @@ builder.Services.AddApplication();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddWorkWellApiVersioning();
+builder.Services.AddWorkWellHealthChecks();
 
 var app = builder.Build();
 
@@ -24,5 +26,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseMiddleware<WorkWell.API.Middleware.ExceptionHandlingMiddleware>();
+
+// Health check endpoint
+app.MapHealthChecks("/health");
 
 app.Run();
