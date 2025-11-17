@@ -15,7 +15,6 @@
     <Folder Include="Filters\" />
     <Folder Include="Extensions\" />
     <Folder Include="HealthChecks\" />
-    <Folder Include="Middleware\" />
   </ItemGroup>
 
   <ItemGroup>

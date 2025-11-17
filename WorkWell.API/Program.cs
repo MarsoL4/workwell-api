@@ -21,5 +21,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<WorkWell.API.Middleware.ExceptionHandlingMiddleware>();
 
 app.Run();
