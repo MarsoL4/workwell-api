@@ -5,7 +5,8 @@ using WorkWell.Application.Services.AvaliacoesEmocionais;
 namespace WorkWell.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class RiscoPsicossocialController : ControllerBase
     {
         private readonly IRiscoPsicossocialService _riscoService;

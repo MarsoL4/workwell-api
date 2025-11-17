@@ -5,7 +5,8 @@ using WorkWell.Application.Services.ApoioPsicologico;
 namespace WorkWell.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ConsultaPsicologicaController : ControllerBase
     {
         private readonly IConsultaPsicologicaService _consultaService;

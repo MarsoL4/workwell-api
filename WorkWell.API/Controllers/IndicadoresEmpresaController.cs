@@ -5,7 +5,8 @@ using WorkWell.Application.Services.Indicadores;
 namespace WorkWell.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class IndicadoresEmpresaController : ControllerBase
     {
         private readonly IIndicadoresEmpresaService _indicadoresService;
