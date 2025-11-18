@@ -1,5 +1,6 @@
 using WorkWell.API.Extensions;
 using WorkWell.API.HealthChecks;
+using WorkWell.API.Security;
 using WorkWell.Application.DependencyInjection;
 using WorkWell.Infrastructure.Configurations;
 
@@ -14,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddWorkWellApiVersioning();
 builder.Services.AddWorkWellHealthChecks();
+builder.Services.AddApiKeySecurity(builder.Configuration);
 
 var app = builder.Build();
 
@@ -24,6 +26,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ApiKeyMiddleware>();
 app.UseHttpsRedirection();
 app.UseMiddleware<WorkWell.API.Middleware.ExceptionHandlingMiddleware>();
 
