@@ -1,12 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.AtividadesBemEstar;
 using WorkWell.Application.Services.AtividadesBemEstar;
+using WorkWell.API.Security;
+using WorkWell.API.SwaggerExamples;
 
 namespace WorkWell.API.Controllers
 {
+    /// <summary>
+    /// Gerencia as atividades de bem-estar promovidas pela empresa.
+    /// </summary>
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiKeyAuthorize("Admin", "RH")]
     public class AtividadeBemEstarController : ControllerBase
     {
         private readonly IAtividadeBemEstarService _atividadeService;
@@ -16,54 +24,115 @@ namespace WorkWell.API.Controllers
             _atividadeService = atividadeService;
         }
 
+        /// <summary>
+        /// Lista todas as atividades de bem-estar cadastradas.
+        /// </summary>
         [HttpGet]
+        [SwaggerResponse(200, "Lista de atividades", typeof(IEnumerable<AtividadeBemEstarDto>))]
+        [ProducesResponseType(typeof(IEnumerable<AtividadeBemEstarDto>), 200)]
         public async Task<ActionResult<IEnumerable<AtividadeBemEstarDto>>> GetAll()
         {
             var atividades = await _atividadeService.GetAllAsync();
             return Ok(atividades);
         }
 
+        /// <summary>
+        /// Busca uma atividade pelo ID.
+        /// </summary>
         [HttpGet("{id:long}")]
+        [SwaggerResponse(200, "Atividade encontrada", typeof(AtividadeBemEstarDto))]
+        [SwaggerResponse(404, "Atividade não encontrada")]
+        [ProducesResponseType(typeof(AtividadeBemEstarDto), 200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<AtividadeBemEstarDto>> GetById(long id)
         {
             var atividade = await _atividadeService.GetByIdAsync(id);
             if (atividade == null)
-                return NotFound();
+                return NotFound(new { mensagem = "Atividade não encontrada." });
             return Ok(atividade);
         }
 
+        /// <summary>
+        /// Cadastra uma nova atividade de bem-estar.
+        /// </summary>
+        /// <remarks>
+        /// O campo <b>Id</b> é gerado automaticamente. Informe empresa, tipo, datas, setor opcionalmente, etc.
+        /// </remarks>
         [HttpPost]
+        [SwaggerRequestExample(typeof(AtividadeBemEstarDto), typeof(AtividadeBemEstarDtoExample))]
+        [SwaggerResponse(201, "Atividade criada com sucesso", typeof(long))]
+        [SwaggerResponse(400, "Dados inválidos")]
+        [ProducesResponseType(typeof(long), 201)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<long>> Create(AtividadeBemEstarDto dto)
         {
             var id = await _atividadeService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
+        /// <summary>
+        /// Atualiza uma atividade existente.
+        /// </summary>
         [HttpPut("{id:long}")]
+        [SwaggerRequestExample(typeof(AtividadeBemEstarDto), typeof(AtividadeBemEstarDtoExample))]
+        [SwaggerResponse(204, "Atividade atualizada com sucesso")]
+        [SwaggerResponse(400, "IDs não coincidem")]
+        [SwaggerResponse(404, "Atividade não encontrada")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Update(long id, AtividadeBemEstarDto dto)
         {
             if (id != dto.Id)
-                return BadRequest("ID da URL e do objeto devem coincidir.");
+                return BadRequest(new { mensagem = "ID da URL e do objeto devem coincidir." });
+
+            var atividade = await _atividadeService.GetByIdAsync(id);
+            if (atividade == null)
+                return NotFound(new { mensagem = "Atividade não encontrada." });
 
             await _atividadeService.UpdateAsync(dto);
             return NoContent();
         }
 
+        /// <summary>
+        /// Remove uma atividade de bem-estar.
+        /// </summary>
         [HttpDelete("{id:long}")]
+        [SwaggerResponse(204, "Atividade removida com sucesso")]
+        [SwaggerResponse(404, "Atividade não encontrada")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> Delete(long id)
         {
+            var atividade = await _atividadeService.GetByIdAsync(id);
+            if (atividade == null)
+                return NotFound(new { mensagem = "Atividade não encontrada." });
             await _atividadeService.DeleteAsync(id);
             return NoContent();
         }
 
+        /// <summary>
+        /// Lista as participações de funcionários em uma atividade.
+        /// </summary>
         [HttpGet("{atividadeId:long}/participacoes")]
+        [SwaggerResponse(200, "Lista de participações", typeof(IEnumerable<ParticipacaoAtividadeDto>))]
+        [ProducesResponseType(typeof(IEnumerable<ParticipacaoAtividadeDto>), 200)]
         public async Task<ActionResult<IEnumerable<ParticipacaoAtividadeDto>>> GetParticipacoes(long atividadeId)
         {
             var participacoes = await _atividadeService.GetParticipacoesAsync(atividadeId);
             return Ok(participacoes);
         }
 
+        /// <summary>
+        /// Registra participação de um funcionário em uma atividade.
+        /// </summary>
+        /// <remarks>
+        /// Informe AtividadeId (na URL), FuncionarioId e outros campos necessários.
+        /// </remarks>
         [HttpPost("{atividadeId:long}/participacoes")]
+        [SwaggerRequestExample(typeof(ParticipacaoAtividadeDto), typeof(ParticipacaoAtividadeDtoExample))]
+        [SwaggerResponse(200, "Participação registrada com sucesso", typeof(long))]
+        [ProducesResponseType(typeof(long), 200)]
         public async Task<ActionResult<long>> Participar(long atividadeId, ParticipacaoAtividadeDto dto)
         {
             var id = await _atividadeService.AdicionarParticipacaoAsync(atividadeId, dto);

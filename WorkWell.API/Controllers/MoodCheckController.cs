@@ -1,12 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.Filters;
+using WorkWell.API.Security;
+using WorkWell.API.SwaggerExamples;
 using WorkWell.Application.DTOs.AvaliacoesEmocionais;
 using WorkWell.Application.Services.AvaliacoesEmocionais;
 
 namespace WorkWell.API.Controllers
 {
+    /// <summary>
+    /// Permite autoavaliação diária do humor para acompanhamento emocional do funcionário.
+    /// </summary>
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiKeyAuthorize("Funcionario", "Psicologo", "RH")]
     public class MoodCheckController : ControllerBase
     {
         private readonly IMoodCheckService _moodService;
@@ -17,6 +25,8 @@ namespace WorkWell.API.Controllers
         }
 
         [HttpGet]
+        [SwaggerResponse(200, "Lista de registros de humor", typeof(IEnumerable<MoodCheckDto>))]
+        [ProducesResponseType(typeof(IEnumerable<MoodCheckDto>), 200)]
         public async Task<ActionResult<IEnumerable<MoodCheckDto>>> GetAll()
         {
             var registros = await _moodService.GetAllAsync();
@@ -24,15 +34,22 @@ namespace WorkWell.API.Controllers
         }
 
         [HttpGet("{id:long}")]
+        [SwaggerResponse(200, "Registro de humor encontrado", typeof(MoodCheckDto))]
+        [SwaggerResponse(404, "Registro não encontrado")]
+        [ProducesResponseType(typeof(MoodCheckDto), 200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<MoodCheckDto>> GetById(long id)
         {
             var entity = await _moodService.GetByIdAsync(id);
             if (entity == null)
-                return NotFound();
+                return NotFound(new { mensagem = "Registro não encontrado." });
             return Ok(entity);
         }
 
         [HttpPost]
+        [SwaggerRequestExample(typeof(MoodCheckDto), typeof(MoodCheckDtoExample))]
+        [SwaggerResponse(201, "Registro criado com sucesso", typeof(long))]
+        [ProducesResponseType(typeof(long), 201)]
         public async Task<ActionResult<long>> Create(MoodCheckDto dto)
         {
             var id = await _moodService.CreateAsync(dto);
@@ -40,16 +57,23 @@ namespace WorkWell.API.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [SwaggerRequestExample(typeof(MoodCheckDto), typeof(MoodCheckDtoExample))]
+        [SwaggerResponse(204, "Registro atualizado com sucesso")]
+        [SwaggerResponse(400, "IDs não coincidem")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Update(long id, MoodCheckDto dto)
         {
             if (id != dto.Id)
-                return BadRequest("ID da URL e do objeto devem coincidir.");
+                return BadRequest(new { mensagem = "ID da URL e do objeto devem coincidir." });
 
             await _moodService.UpdateAsync(dto);
             return NoContent();
         }
 
         [HttpDelete("{id:long}")]
+        [SwaggerResponse(204, "Registro removido com sucesso")]
+        [ProducesResponseType(204)]
         public async Task<IActionResult> Delete(long id)
         {
             await _moodService.DeleteAsync(id);
