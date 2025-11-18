@@ -13,14 +13,19 @@
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.22" />
 		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.4" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\WorkWell.Application\WorkWell.Application.csproj" />
 		<ProjectReference Include="..\WorkWell.Infrastructure\WorkWell.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="SwaggerExamples\" />
 	</ItemGroup>
 
 </Project>

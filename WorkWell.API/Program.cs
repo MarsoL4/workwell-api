@@ -4,6 +4,7 @@ using WorkWell.API.HealthChecks;
 using WorkWell.API.Security;
 using WorkWell.Application.DependencyInjection;
 using WorkWell.Infrastructure.Configurations;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,7 @@ builder.Services.AddControllers(opt =>
     opt.Filters.Add<ModelValidationFilter>();
 });
 
-// Swagger/OpenAPI
+// Swagger/OpenAPI + EXAMPLES
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddWorkWellSwagger();
 
@@ -32,12 +33,18 @@ builder.Services.AddApiKeySecurity(builder.Configuration);
 
 var app = builder.Build();
 
-// Swagger
-if (app.Environment.IsDevelopment())
+// ApiVersionDescriptionProvider é NECESSÁRIO para o Swagger UI suportar versionamento
+var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+// Swagger UI com Versionamento
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    foreach (var description in provider.ApiVersionDescriptions)
+    {
+        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"WorkWell API {description.GroupName.ToUpperInvariant()}");
+    }
+});
 
 // Global Error + API Key Middlewares
 app.UseMiddleware<WorkWell.API.Middleware.ErrorHandlingMiddleware>();
