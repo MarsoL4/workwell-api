@@ -9,7 +9,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new EmpresaDto
             {
-                Id = 1,
                 Nome = "Exemplo Ltda",
                 EmailAdmin = "admin@exemplo.com",
                 TokenAcesso = "token-exemplo-12345",

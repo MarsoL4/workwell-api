@@ -10,7 +10,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new ChatAnonimoDto
             {
-                Id = 1,
                 RemetenteId = 100,
                 PsicologoId = 201,
                 Mensagem = "Estou passando por dificuldades e gostaria de conversar.",

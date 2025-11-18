@@ -11,7 +11,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new ConsultaPsicologicaDto
             {
-                Id = 1,
                 FuncionarioId = 100,
                 PsicologoId = 200,
                 DataConsulta = DateTime.UtcNow,

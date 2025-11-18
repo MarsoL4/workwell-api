@@ -9,7 +9,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new SetorDto
             {
-                Id = 2,
                 Nome = "Recursos Humanos",
                 EmpresaId = 1
             };

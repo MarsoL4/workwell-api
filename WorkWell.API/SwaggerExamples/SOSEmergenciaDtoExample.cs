@@ -10,7 +10,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new SOSemergenciaDto
             {
-                Id = 1,
                 FuncionarioId = 101,
                 DataAcionamento = DateTime.UtcNow,
                 Tipo = "Crise de ansiedade",

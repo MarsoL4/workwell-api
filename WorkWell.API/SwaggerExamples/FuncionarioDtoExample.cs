@@ -10,7 +10,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new FuncionarioDto
             {
-                Id = 100,
                 Nome = "Maria Oliveira",
                 Email = "maria.oliveira@exemplo.com",
                 Cargo = Cargo.Funcionario,

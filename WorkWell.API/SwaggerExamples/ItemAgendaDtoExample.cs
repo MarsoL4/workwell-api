@@ -10,7 +10,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new ItemAgendaDto
             {
-                Id = 1,
                 AgendaFuncionarioId = 1,
                 Tipo = "atividade",
                 Titulo = "Palestra sobre Resiliência",

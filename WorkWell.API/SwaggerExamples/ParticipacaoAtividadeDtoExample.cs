@@ -10,7 +10,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new ParticipacaoAtividadeDto
             {
-                Id = 1,
                 FuncionarioId = 100,
                 AtividadeId = 5,
                 Participou = true,

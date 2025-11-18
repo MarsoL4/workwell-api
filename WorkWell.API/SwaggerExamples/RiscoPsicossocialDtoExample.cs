@@ -10,7 +10,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new RiscoPsicossocialDto
             {
-                Id = 1,
                 FuncionarioId = 101,
                 Categoria = "Sobrecarga de trabalho",
                 NivelRisco = 3,

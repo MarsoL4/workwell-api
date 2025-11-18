@@ -10,7 +10,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new AvaliacaoProfundaDto
             {
-                Id = 1,
                 FuncionarioId = 101,
                 Gad7Score = 4,
                 Phq9Score = 6,

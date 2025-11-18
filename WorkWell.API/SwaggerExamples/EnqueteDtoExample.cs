@@ -10,7 +10,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new EnqueteDto
             {
-                Id = 1,
                 EmpresaId = 1,
                 Pergunta = "Você está satisfeito com as condições de trabalho?",
                 DataCriacao = DateTime.UtcNow,

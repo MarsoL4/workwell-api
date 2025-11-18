@@ -9,7 +9,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new PsicologoDto
             {
-                Id = 201,
                 Nome = "Dra. Helena Alves",
                 Email = "helena.alves@workwell.com",
                 Crp = "06/123456",

@@ -10,7 +10,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new MoodCheckDto
             {
-                Id = 1,
                 FuncionarioId = 101,
                 Humor = 4,
                 Produtivo = true,

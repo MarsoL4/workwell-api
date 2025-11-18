@@ -11,7 +11,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new NotificacaoDto
             {
-                Id = 1,
                 FuncionarioId = 20,
                 Mensagem = "Você tem uma nova consulta agendada.",
                 Tipo = TipoNotificacao.Consulta,

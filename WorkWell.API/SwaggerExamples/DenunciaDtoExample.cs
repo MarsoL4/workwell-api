@@ -11,7 +11,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new DenunciaDto
             {
-                Id = 1,
                 FuncionarioDenuncianteId = null,
                 EmpresaId = 1,
                 Tipo = TipoDenuncia.AssedioMoral,

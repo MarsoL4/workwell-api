@@ -11,7 +11,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new AtividadeBemEstarDto
             {
-                Id = 5,
                 EmpresaId = 1,
                 Tipo = TipoAtividade.PalestraBemEstar,
                 Titulo = "Semana Saúde Mental",

@@ -10,7 +10,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new InvestigacaoDenunciaDto
             {
-                Id = 1,
                 DenunciaId = 1,
                 EquipeResponsavel = "RH",
                 DataInicio = DateTime.UtcNow,

@@ -11,14 +11,12 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new AgendaFuncionarioDto
             {
-                Id = 1,
                 FuncionarioId = 101,
                 Data = DateTime.Today.AddDays(1),
                 Itens = new List<ItemAgendaDto>
                 {
                     new ItemAgendaDto
                     {
-                        Id = 1,
                         AgendaFuncionarioId = 1,
                         Tipo = "consulta",
                         Titulo = "Consulta com Psicólogo",

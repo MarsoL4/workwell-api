@@ -9,7 +9,6 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new RespostaEnqueteDto
             {
-                Id = 10,
                 EnqueteId = 1,
                 FuncionarioId = 100,
                 Resposta = "Sim"
