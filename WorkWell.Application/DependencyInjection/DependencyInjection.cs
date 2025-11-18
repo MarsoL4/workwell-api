@@ -1,54 +1,75 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using WorkWell.Application.Services.EmpresaOrganizacao;
-using WorkWell.Application.Services.Agenda;
-using WorkWell.Application.Services.ApoioPsicologico;
-using WorkWell.Application.Services.AtividadesBemEstar;
-using WorkWell.Application.Services.Enquetes;
-using WorkWell.Application.Services.Indicadores;
-using WorkWell.Application.Services.Notificacoes;
-using WorkWell.Application.Services.OmbudMind;
-using WorkWell.Application.Services.AvaliacoesEmocionais;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using WorkWell.Infrastructure.Persistence;
 
-namespace WorkWell.Application.DependencyInjection
+using WorkWell.Domain.Interfaces.EmpresaOrganizacao;
+using WorkWell.Infrastructure.Repositories.EmpresaOrganizacao;
+using WorkWell.Domain.Interfaces.Agenda;
+using WorkWell.Infrastructure.Repositories.Agenda;
+using WorkWell.Domain.Interfaces.ApoioPsicologico;
+using WorkWell.Infrastructure.Repositories.ApoioPsicologico;
+using WorkWell.Domain.Interfaces.AtividadesBemEstar;
+using WorkWell.Infrastructure.Repositories.AtividadesBemEstar;
+using WorkWell.Domain.Interfaces.Enquetes;
+using WorkWell.Infrastructure.Repositories.Enquetes;
+using WorkWell.Domain.Interfaces.Indicadores;
+using WorkWell.Infrastructure.Repositories.Indicadores;
+using WorkWell.Domain.Interfaces.Notificacoes;
+using WorkWell.Infrastructure.Repositories.Notificacoes;
+using WorkWell.Domain.Interfaces.OmbudMind;
+using WorkWell.Infrastructure.Repositories.OmbudMind;
+using WorkWell.Domain.Interfaces.AvaliacoesEmocionais;
+using WorkWell.Infrastructure.Repositories.AvaliacoesEmocionais;
+
+namespace WorkWell.Infrastructure.Configurations
 {
-    public static class ApplicationDependencyInjection
+    public static class InfrastructureDependencyInjection
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            // Usa Oracle.
+            services.AddDbContext<WorkWellDbContext>(options =>
+                options.UseOracle(configuration.GetConnectionString("Oracle")));
+
             // Empresa & Organização
-            services.AddScoped<IEmpresaService, EmpresaService>();
-            services.AddScoped<IFuncionarioService, FuncionarioService>();
-            services.AddScoped<ISetorService, SetorService>();
+            services.AddScoped<IEmpresaRepository, EmpresaRepository>();
+            services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
+            services.AddScoped<ISetorRepository, SetorRepository>();
 
             // Agenda
-            services.AddScoped<IAgendaFuncionarioService, AgendaFuncionarioService>();
+            services.AddScoped<IAgendaFuncionarioRepository, AgendaFuncionarioRepository>();
+            services.AddScoped<IItemAgendaRepository, ItemAgendaRepository>();
 
             // Apoio Psicológico
-            services.AddScoped<IConsultaPsicologicaService, ConsultaPsicologicaService>();
-            services.AddScoped<IChatAnonimoService, ChatAnonimoService>();
-            services.AddScoped<IPsicologoService, PsicologoService>();
-            services.AddScoped<ISOSemergenciaService, SOSemergenciaService>();
+            services.AddScoped<IConsultaPsicologicaRepository, ConsultaPsicologicaRepository>();
+            services.AddScoped<IChatAnonimoRepository, ChatAnonimoRepository>();
+            services.AddScoped<IPsicologoRepository, PsicologoRepository>();
+            services.AddScoped<ISOSemergenciaRepository, SOSemergenciaRepository>();
 
             // Atividades Bem-Estar
-            services.AddScoped<IAtividadeBemEstarService, AtividadeBemEstarService>();
+            services.AddScoped<IAtividadeBemEstarRepository, AtividadeBemEstarRepository>();
+            services.AddScoped<IParticipacaoAtividadeRepository, ParticipacaoAtividadeRepository>();
 
             // Enquetes
-            services.AddScoped<IEnqueteService, EnqueteService>();
+            services.AddScoped<IEnqueteRepository, EnqueteRepository>();
+            services.AddScoped<IRespostaEnqueteRepository, RespostaEnqueteRepository>();
 
             // Indicadores
-            services.AddScoped<IIndicadoresEmpresaService, IndicadoresEmpresaService>();
+            services.AddScoped<IIndicadoresEmpresaRepository, IndicadoresEmpresaRepository>();
 
             // Notificações
-            services.AddScoped<INotificacaoService, NotificacaoService>();
+            services.AddScoped<INotificacaoRepository, NotificacaoRepository>();
 
-            // OmbudMind (Denúncia)
-            services.AddScoped<IDenunciaService, DenunciaService>();
+            // OmbudMind
+            services.AddScoped<IDenunciaRepository, DenunciaRepository>();
+            services.AddScoped<IInvestigacaoDenunciaRepository, InvestigacaoDenunciaRepository>();
 
             // Avaliações Emocionais
-            services.AddScoped<IPerfilEmocionalService, PerfilEmocionalService>();
-            services.AddScoped<IMoodCheckService, MoodCheckService>();
-            services.AddScoped<IAvaliacaoProfundaService, AvaliacaoProfundaService>();
-            services.AddScoped<IRiscoPsicossocialService, RiscoPsicossocialService>();
+            services.AddScoped<IAvaliacaoProfundaRepository, AvaliacaoProfundaRepository>();
+            services.AddScoped<IMoodCheckRepository, MoodCheckRepository>();
+            services.AddScoped<IPerfilEmocionalRepository, PerfilEmocionalRepository>();
+            services.AddScoped<IRiscoPsicossocialRepository, RiscoPsicossocialRepository>();
 
             return services;
         }
