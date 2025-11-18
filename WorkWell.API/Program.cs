@@ -19,7 +19,7 @@ builder.Services.AddControllers(opt =>
 
 // Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddWorkWellSwagger();
 
 // Versioning
 builder.Services.AddWorkWellApiVersioning();
