@@ -24,8 +24,4 @@
 		<ProjectReference Include="..\WorkWell.Infrastructure\WorkWell.Infrastructure.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="SwaggerExamples\" />
-	</ItemGroup>
-
 </Project>

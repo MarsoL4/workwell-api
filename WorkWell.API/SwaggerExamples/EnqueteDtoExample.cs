@@ -1,0 +1,21 @@
+﻿using Swashbuckle.AspNetCore.Filters;
+using WorkWell.Application.DTOs.Enquetes;
+using System;
+
+namespace WorkWell.API.SwaggerExamples
+{
+    public class EnqueteDtoExample : IExamplesProvider<EnqueteDto>
+    {
+        public EnqueteDto GetExamples()
+        {
+            return new EnqueteDto
+            {
+                Id = 1,
+                EmpresaId = 1,
+                Pergunta = "Você está satisfeito com as condições de trabalho?",
+                DataCriacao = DateTime.UtcNow,
+                Ativa = true
+            };
+        }
+    }
+}
