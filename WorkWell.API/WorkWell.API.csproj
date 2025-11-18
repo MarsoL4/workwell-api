@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Filters\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WorkWell.Application\WorkWell.Application.csproj" />
     <ProjectReference Include="..\WorkWell.Infrastructure\WorkWell.Infrastructure.csproj" />
   </ItemGroup>

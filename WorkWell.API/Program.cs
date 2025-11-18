@@ -1,4 +1,5 @@
 using WorkWell.API.Extensions;
+using WorkWell.API.Filters;
 using WorkWell.API.HealthChecks;
 using WorkWell.API.Security;
 using WorkWell.Application.DependencyInjection;
@@ -10,27 +11,43 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
-// Add services to the container and configure Swagger/OpenAPI
+// Add controllers with global model validation filter
+builder.Services.AddControllers(opt =>
+{
+    opt.Filters.Add<ModelValidationFilter>();
+});
+
+// Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Versioning
 builder.Services.AddWorkWellApiVersioning();
+
+// Health Check
 builder.Services.AddWorkWellHealthChecks();
+
+// API Key Security
 builder.Services.AddApiKeySecurity(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Global Error + API Key Middlewares
+app.UseMiddleware<WorkWell.API.Middleware.ErrorHandlingMiddleware>();
 app.UseMiddleware<ApiKeyMiddleware>();
+
 app.UseHttpsRedirection();
-app.UseMiddleware<WorkWell.API.Middleware.ExceptionHandlingMiddleware>();
 
 // Health check endpoint
 app.MapHealthChecks("/health");
+
+app.MapControllers();
 
 app.Run();
