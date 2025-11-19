@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
+using WorkWell.API.Helpers;
 using WorkWell.API.Security;
 using WorkWell.API.SwaggerExamples;
 using WorkWell.Application.DTOs.EmpresaOrganizacao;
@@ -34,6 +35,7 @@ namespace WorkWell.API.Controllers
         public async Task<ActionResult<PagedResultDto<FuncionarioDto>>> GetAllPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _funcionarioService.GetAllPagedAsync(page, pageSize);
+            result.Links = HateoasLinkBuilder.BuildPagedLinks(HttpContext, result.Page, result.PageSize, result.TotalCount);
             return Ok(result);
         }
 

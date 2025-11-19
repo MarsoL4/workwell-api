@@ -6,6 +6,7 @@ using WorkWell.Application.Services.EmpresaOrganizacao;
 using WorkWell.Application.DTOs.Paginacao;
 using WorkWell.API.Security;
 using WorkWell.API.SwaggerExamples;
+using WorkWell.API.Helpers;
 
 namespace WorkWell.API.Controllers
 {
@@ -40,6 +41,10 @@ namespace WorkWell.API.Controllers
         public async Task<ActionResult<PagedResultDto<EmpresaDto>>> GetAllPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _empresaService.GetAllPagedAsync(page, pageSize);
+
+            // Gera os links HATEOAS
+            result.Links = HateoasLinkBuilder.BuildPagedLinks(HttpContext, result.Page, result.PageSize, result.TotalCount);
+
             return Ok(result);
         }
 

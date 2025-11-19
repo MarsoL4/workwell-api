@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
+using WorkWell.API.Helpers;
 using WorkWell.API.Security;
 using WorkWell.API.SwaggerExamples;
 using WorkWell.Application.DTOs.Notificacoes;
@@ -31,6 +32,7 @@ namespace WorkWell.API.Controllers
         public async Task<ActionResult<PagedResultDto<NotificacaoDto>>> GetAllPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _notificacaoService.GetAllPagedAsync(page, pageSize);
+            result.Links = HateoasLinkBuilder.BuildPagedLinks(HttpContext, result.Page, result.PageSize, result.TotalCount);
             return Ok(result);
         }
 
