@@ -1,5 +1,4 @@
-﻿using System;
-using WorkWell.Domain.Enums.OmbudMind;
+﻿using WorkWell.Domain.Enums.OmbudMind;
 
 namespace WorkWell.Application.DTOs.OmbudMind
 {
@@ -10,7 +9,7 @@ namespace WorkWell.Application.DTOs.OmbudMind
         public long EmpresaId { get; set; }
         public TipoDenuncia Tipo { get; set; }
         public string Descricao { get; set; } = null!;
-        public DateTime DataCriacao { get; set; }
+        public DateTime? DataCriacao { get; set; }
         public StatusDenuncia Status { get; set; }
         public string CodigoRastreamento { get; set; } = null!;
     }

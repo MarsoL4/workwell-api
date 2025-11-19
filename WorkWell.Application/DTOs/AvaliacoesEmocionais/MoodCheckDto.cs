@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WorkWell.Application.DTOs.AvaliacoesEmocionais
+﻿namespace WorkWell.Application.DTOs.AvaliacoesEmocionais
 {
     public class MoodCheckDto
     {
@@ -10,6 +8,6 @@ namespace WorkWell.Application.DTOs.AvaliacoesEmocionais
         public bool Produtivo { get; set; }
         public bool Estressado { get; set; }
         public bool DormiuBem { get; set; }
-        public DateTime DataRegistro { get; set; }
+        public DateTime? DataRegistro { get; set; }
     }
 }

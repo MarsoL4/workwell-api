@@ -1,5 +1,4 @@
-﻿using System;
-using WorkWell.Domain.Enums.Notificacoes;
+﻿using WorkWell.Domain.Enums.Notificacoes;
 
 namespace WorkWell.Application.DTOs.Notificacoes
 {
@@ -10,6 +9,6 @@ namespace WorkWell.Application.DTOs.Notificacoes
         public string Mensagem { get; set; } = null!;
         public TipoNotificacao Tipo { get; set; }
         public bool Lida { get; set; }
-        public DateTime DataEnvio { get; set; }
+        public DateTime? DataEnvio { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WorkWell.Application.DTOs.ApoioPsicologico
+﻿namespace WorkWell.Application.DTOs.ApoioPsicologico
 {
     public class ChatAnonimoDto
     {
@@ -8,7 +6,7 @@ namespace WorkWell.Application.DTOs.ApoioPsicologico
         public long? RemetenteId { get; set; }
         public long PsicologoId { get; set; }
         public string Mensagem { get; set; } = null!;
-        public DateTime DataEnvio { get; set; }
+        public DateTime? DataEnvio { get; set; }
         public bool Anonimo { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WorkWell.Application.DTOs.AvaliacoesEmocionais
+﻿namespace WorkWell.Application.DTOs.AvaliacoesEmocionais
 {
     public class PerfilEmocionalDto
     {
@@ -9,6 +7,6 @@ namespace WorkWell.Application.DTOs.AvaliacoesEmocionais
         public string HumorInicial { get; set; } = null!;
         public string Rotina { get; set; } = null!;
         public string PrincipaisEstressores { get; set; } = null!;
-        public DateTime DataCriacao { get; set; }
+        public DateTime? DataCriacao { get; set; }
     }
 }

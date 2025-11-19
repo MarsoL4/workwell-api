@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WorkWell.Application.DTOs.AvaliacoesEmocionais
+﻿namespace WorkWell.Application.DTOs.AvaliacoesEmocionais
 {
     public class AvaliacaoProfundaDto
     {
@@ -9,6 +7,6 @@ namespace WorkWell.Application.DTOs.AvaliacoesEmocionais
         public int Gad7Score { get; set; }
         public int? Phq9Score { get; set; }
         public string Interpretacao { get; set; } = null!;
-        public DateTime DataRegistro { get; set; }
+        public DateTime? DataRegistro { get; set; }
     }
 }
