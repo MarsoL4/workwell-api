@@ -32,8 +32,6 @@ namespace WorkWell.API.Controllers
         /// Permite paginação com os parâmetros <b>page</b> e <b>pageSize</b>.
         /// Apenas Admin pode visualizar todas as empresas.
         /// </remarks>
-        /// <param name="page">Número da página (padrão: 1)</param>
-        /// <param name="pageSize">Quantidade de itens por página (padrão: 10)</param>
         /// <returns>Lista paginada de empresas</returns>
         [HttpGet]
         [SwaggerResponse(200, "Lista paginada de empresas", typeof(PagedResultDto<EmpresaDto>))]
@@ -72,7 +70,6 @@ namespace WorkWell.API.Controllers
         /// <remarks>
         /// Só o Admin pode cadastrar. O campo ID é gerado automaticamente.
         /// </remarks>
-        /// <param name="empresaDto">Dados da nova empresa (sem Id)</param>
         /// <returns>ID da empresa criada</returns>
         [HttpPost]
         [SwaggerRequestExample(typeof(EmpresaDto), typeof(EmpresaDtoExample))]
@@ -87,10 +84,8 @@ namespace WorkWell.API.Controllers
         }
 
         /// <summary>
-        /// Atualiza uma empresa existente.
+        /// Atualiza uma empresa existente pelo ID.
         /// </summary>
-        /// <param name="id">ID da empresa</param>
-        /// <param name="empresaDto">Dados atualizados</param>
         /// <returns>NoContent</returns>
         [HttpPut("{id:long}")]
         [SwaggerRequestExample(typeof(EmpresaDto), typeof(EmpresaDtoExample))]
@@ -116,7 +111,6 @@ namespace WorkWell.API.Controllers
         /// <summary>
         /// Remove uma empresa por ID.
         /// </summary>
-        /// <param name="id">ID da empresa</param>
         /// <returns>NoContent</returns>
         [HttpDelete("{id:long}")]
         [SwaggerResponse(204, "Empresa removida com sucesso")]
