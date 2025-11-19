@@ -57,7 +57,19 @@ namespace WorkWell.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // Espaço para configurações Fluent API adicionais no futuro
+            // Corrige mapeamento de bool para Oracle: NUMBER(1)
+            foreach (var entity in modelBuilder.Model.GetEntityTypes())
+            {
+                var boolProperties = entity.ClrType.GetProperties()
+                    .Where(p => p.PropertyType == typeof(bool) || p.PropertyType == typeof(bool?));
+                foreach (var prop in boolProperties)
+                {
+                    modelBuilder.Entity(entity.ClrType)
+                        .Property(prop.Name)
+                        .HasConversion<int>()
+                        .HasColumnType("NUMBER(1)");
+                }
+            }
         }
     }
 }
