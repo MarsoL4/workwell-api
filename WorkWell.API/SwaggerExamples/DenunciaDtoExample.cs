@@ -15,7 +15,6 @@ namespace WorkWell.API.SwaggerExamples
                 EmpresaId = 1,
                 Tipo = TipoDenuncia.AssedioMoral,
                 Descricao = "Fui vítima de assédio moral pelo gestor.",
-                DataCriacao = DateTime.UtcNow,
                 Status = StatusDenuncia.Aberta,
                 CodigoRastreamento = "9CFD103BF9B7"
             };

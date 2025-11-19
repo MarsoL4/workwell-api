@@ -14,8 +14,7 @@ namespace WorkWell.API.SwaggerExamples
                 Humor = 4,
                 Produtivo = true,
                 Estressado = false,
-                DormiuBem = true,
-                DataRegistro = DateTime.UtcNow
+                DormiuBem = true
             };
         }
     }

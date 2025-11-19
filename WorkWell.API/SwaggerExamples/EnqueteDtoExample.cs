@@ -12,7 +12,6 @@ namespace WorkWell.API.SwaggerExamples
             {
                 EmpresaId = 1,
                 Pergunta = "Você está satisfeito com as condições de trabalho?",
-                DataCriacao = DateTime.UtcNow,
                 Ativa = true
             };
         }

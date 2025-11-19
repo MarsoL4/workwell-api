@@ -13,7 +13,6 @@ namespace WorkWell.API.SwaggerExamples
                 RemetenteId = 100,
                 PsicologoId = 201,
                 Mensagem = "Estou passando por dificuldades e gostaria de conversar.",
-                DataEnvio = DateTime.UtcNow,
                 Anonimo = true
             };
         }

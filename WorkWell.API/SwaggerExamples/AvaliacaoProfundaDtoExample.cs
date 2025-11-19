@@ -13,8 +13,7 @@ namespace WorkWell.API.SwaggerExamples
                 FuncionarioId = 101,
                 Gad7Score = 4,
                 Phq9Score = 6,
-                Interpretacao = "Ansiedade leve, depressão leve.",
-                DataRegistro = DateTime.UtcNow
+                Interpretacao = "Ansiedade leve, depressão leve."
             };
         }
     }

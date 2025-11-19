@@ -13,8 +13,7 @@ namespace WorkWell.API.SwaggerExamples
                 FuncionarioId = 101,
                 HumorInicial = "Bem",
                 Rotina = "Acorda às 7h, trabalha até 18h, faz caminhada no final do dia.",
-                PrincipaisEstressores = "Demandas em excesso e prazos curtos.",
-                DataCriacao = DateTime.UtcNow
+                PrincipaisEstressores = "Demandas em excesso e prazos curtos."
             };
         }
     }

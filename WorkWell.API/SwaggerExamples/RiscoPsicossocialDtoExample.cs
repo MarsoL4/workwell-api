@@ -12,8 +12,7 @@ namespace WorkWell.API.SwaggerExamples
             {
                 FuncionarioId = 101,
                 Categoria = "Sobrecarga de trabalho",
-                NivelRisco = 3,
-                DataRegistro = DateTime.UtcNow
+                NivelRisco = 3
             };
         }
     }

@@ -14,8 +14,7 @@ namespace WorkWell.API.SwaggerExamples
                 FuncionarioId = 20,
                 Mensagem = "Você tem uma nova consulta agendada.",
                 Tipo = TipoNotificacao.Consulta,
-                Lida = false,
-                DataEnvio = DateTime.UtcNow
+                Lida = false
             };
         }
     }

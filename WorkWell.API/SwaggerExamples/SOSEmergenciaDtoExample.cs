@@ -12,8 +12,7 @@ namespace WorkWell.API.SwaggerExamples
             {
                 FuncionarioId = 101,
                 DataAcionamento = DateTime.UtcNow,
-                Tipo = "Crise de ansiedade",
-                PsicologoNotificado = true
+                Tipo = "Crise de ansiedade"
             };
         }
     }
