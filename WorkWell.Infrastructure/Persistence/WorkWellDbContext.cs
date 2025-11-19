@@ -8,6 +8,7 @@ using WorkWell.Domain.Entities.AvaliacoesEmocionais;
 using WorkWell.Domain.Entities.Notificacoes;
 using WorkWell.Domain.Entities.OmbudMind;
 using WorkWell.Domain.Entities.Agenda;
+using System.Text;
 
 namespace WorkWell.Infrastructure.Persistence
 {
@@ -60,8 +61,8 @@ namespace WorkWell.Infrastructure.Persistence
 
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
-                // Força os nomes das tabelas para CAPS LOCK
-                modelBuilder.Entity(entity.ClrType).ToTable(entity.GetTableName()!.ToUpper());
+                // Usa nome da tabela em CAPS_SNAKE_CASE
+                modelBuilder.Entity(entity.ClrType).ToTable(ToOracleSnakeCase(entity.GetTableName()!));
 
                 // Corrige mapeamento de bool para Oracle: NUMBER(1)
                 var boolProperties = entity.ClrType.GetProperties()
@@ -74,6 +75,25 @@ namespace WorkWell.Infrastructure.Persistence
                         .HasColumnType("NUMBER(1)");
                 }
             }
+        }
+
+        private static string ToOracleSnakeCase(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return name ?? string.Empty;
+
+            var sb = new StringBuilder(name.Length * 2);
+            for (int i = 0; i < name.Length; i++)
+            {
+                var c = name[i];
+                if (char.IsUpper(c) && i > 0 &&
+                    (char.IsLower(name[i - 1]) || (i + 1 < name.Length && char.IsLower(name[i + 1]))))
+                {
+                    sb.Append('_');
+                }
+                sb.Append(char.ToUpperInvariant(c));
+            }
+            return sb.ToString();
         }
     }
 }
