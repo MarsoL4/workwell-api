@@ -57,9 +57,13 @@ namespace WorkWell.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // Corrige mapeamento de bool para Oracle: NUMBER(1)
+
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
+                // Força os nomes das tabelas para CAPS LOCK
+                modelBuilder.Entity(entity.ClrType).ToTable(entity.GetTableName()!.ToUpper());
+
+                // Corrige mapeamento de bool para Oracle: NUMBER(1)
                 var boolProperties = entity.ClrType.GetProperties()
                     .Where(p => p.PropertyType == typeof(bool) || p.PropertyType == typeof(bool?));
                 foreach (var prop in boolProperties)
