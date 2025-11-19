@@ -1,10 +1,11 @@
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using WorkWell.API.Extensions;
 using WorkWell.API.Filters;
 using WorkWell.API.HealthChecks;
 using WorkWell.API.Security;
 using WorkWell.Application.DependencyInjection;
 using WorkWell.Infrastructure.Configurations;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using WorkWell.Infrastructure.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,12 @@ app.UseSwaggerUI(options =>
 // Global Error + API Key Middlewares
 app.UseMiddleware<WorkWell.API.Middleware.ErrorHandlingMiddleware>();
 app.UseMiddleware<ApiKeyMiddleware>();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<WorkWell.Infrastructure.Persistence.WorkWellDbContext>();
+    DbInitializer.Seed(context);
+}
 
 app.UseHttpsRedirection();
 
