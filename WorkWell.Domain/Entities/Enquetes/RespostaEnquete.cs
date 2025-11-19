@@ -1,4 +1,5 @@
-﻿using WorkWell.Domain.Entities.EmpresaOrganizacao;
+﻿using System.ComponentModel.DataAnnotations;
+using WorkWell.Domain.Entities.EmpresaOrganizacao;
 
 namespace WorkWell.Domain.Entities.Enquetes
 {
@@ -9,6 +10,8 @@ namespace WorkWell.Domain.Entities.Enquetes
         public Enquete? Enquete { get; set; }
         public long FuncionarioId { get; set; }
         public Funcionario? Funcionario { get; set; }
+
+        [MaxLength(500)]
         public string Resposta { get; set; } = null!;
     }
 }

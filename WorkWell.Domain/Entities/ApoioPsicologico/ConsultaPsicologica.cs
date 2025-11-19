@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using WorkWell.Domain.Entities.EmpresaOrganizacao;
 using WorkWell.Domain.Enums.ApoioPsicologico;
 
@@ -14,6 +15,8 @@ namespace WorkWell.Domain.Entities.ApoioPsicologico
         public DateTime DataConsulta { get; set; }
         public TipoConsulta Tipo { get; set; }
         public StatusConsulta Status { get; set; }
+
+        [MaxLength(2000)]
         public string AnotacoesSigilosas { get; set; } = string.Empty;
     }
 }
