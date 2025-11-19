@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using WorkWell.Application.DTOs.ApoioPsicologico;
 using WorkWell.Domain.Entities.ApoioPsicologico;
+using WorkWell.Domain.Extensions;
 using WorkWell.Domain.Interfaces.ApoioPsicologico;
 
 namespace WorkWell.Application.Services.ApoioPsicologico
@@ -33,6 +34,7 @@ namespace WorkWell.Application.Services.ApoioPsicologico
         public async Task<long> CreateAsync(ChatAnonimoDto dto)
         {
             var entity = FromDto(dto);
+            entity.DataEnvio = DateTime.UtcNow.TruncateToMinutes();
             await _repo.AddAsync(entity);
             return entity.Id;
         }
@@ -64,7 +66,7 @@ namespace WorkWell.Application.Services.ApoioPsicologico
             RemetenteId = d.RemetenteId,
             PsicologoId = d.PsicologoId,
             Mensagem = d.Mensagem,
-            DataEnvio = d.DataEnvio,
+            DataEnvio = d.DataEnvio ?? DateTime.UtcNow.TruncateToMinutes(),
             Anonimo = d.Anonimo
         };
     }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorkWell.Application.DTOs.AtividadesBemEstar;
 using WorkWell.Domain.Entities.AtividadesBemEstar;
+using WorkWell.Domain.Extensions;
 using WorkWell.Domain.Interfaces.AtividadesBemEstar;
 
 namespace WorkWell.Application.Services.AtividadesBemEstar
@@ -52,6 +53,7 @@ namespace WorkWell.Application.Services.AtividadesBemEstar
         {
             var entity = FromDto(dto);
             entity.AtividadeId = atividadeId;
+            entity.DataParticipacao = DateTime.UtcNow.TruncateToMinutes();
             await _participacaoRepo.AddAsync(entity);
             return entity.Id;
         }
@@ -96,7 +98,7 @@ namespace WorkWell.Application.Services.AtividadesBemEstar
             FuncionarioId = dto.FuncionarioId,
             AtividadeId = dto.AtividadeId,
             Participou = dto.Participou,
-            DataParticipacao = dto.DataParticipacao
+            DataParticipacao = dto.DataParticipacao ?? DateTime.UtcNow.TruncateToMinutes()
         };
     }
 }

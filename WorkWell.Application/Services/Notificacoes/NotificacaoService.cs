@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using WorkWell.Application.DTOs.Notificacoes;
 using WorkWell.Application.DTOs.Paginacao;
 using WorkWell.Domain.Entities.Notificacoes;
+using WorkWell.Domain.Extensions;
 using WorkWell.Domain.Interfaces.Notificacoes;
 
 namespace WorkWell.Application.Services.Notificacoes
@@ -50,6 +51,7 @@ namespace WorkWell.Application.Services.Notificacoes
         public async Task<long> CreateAsync(NotificacaoDto dto)
         {
             var entity = FromDto(dto);
+            entity.DataEnvio = DateTime.UtcNow.TruncateToMinutes();
             await _repository.AddAsync(entity);
             return entity.Id;
         }
@@ -82,7 +84,7 @@ namespace WorkWell.Application.Services.Notificacoes
             Mensagem = dto.Mensagem,
             Tipo = dto.Tipo,
             Lida = dto.Lida,
-            DataEnvio = dto.DataEnvio
+            DataEnvio = dto.DataEnvio ?? DateTime.UtcNow.TruncateToMinutes()
         };
     }
 }

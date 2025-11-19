@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using WorkWell.Application.DTOs.AvaliacoesEmocionais;
 using WorkWell.Domain.Entities.AvaliacoesEmocionais;
+using WorkWell.Domain.Extensions;
 using WorkWell.Domain.Interfaces.AvaliacoesEmocionais;
 
 namespace WorkWell.Application.Services.AvaliacoesEmocionais
@@ -33,6 +34,7 @@ namespace WorkWell.Application.Services.AvaliacoesEmocionais
         public async Task<long> CreateAsync(AvaliacaoProfundaDto dto)
         {
             var entity = FromDto(dto);
+            entity.DataRegistro = DateTime.UtcNow.TruncateToMinutes();
             await _repo.AddAsync(entity);
             return entity.Id;
         }
@@ -65,7 +67,7 @@ namespace WorkWell.Application.Services.AvaliacoesEmocionais
             Gad7Score = d.Gad7Score,
             Phq9Score = d.Phq9Score,
             Interpretacao = d.Interpretacao,
-            DataRegistro = d.DataRegistro
+            DataRegistro = d.DataRegistro ?? DateTime.UtcNow.TruncateToMinutes()
         };
     }
 }

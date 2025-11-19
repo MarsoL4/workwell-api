@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using WorkWell.Application.DTOs.Enquetes;
 using WorkWell.Application.DTOs.Paginacao;
 using WorkWell.Domain.Entities.Enquetes;
+using WorkWell.Domain.Extensions;
 using WorkWell.Domain.Interfaces.Enquetes;
 
 namespace WorkWell.Application.Services.Enquetes
@@ -43,6 +44,7 @@ namespace WorkWell.Application.Services.Enquetes
         public async Task<long> CreateAsync(EnqueteDto dto)
         {
             var entity = FromDto(dto);
+            entity.DataCriacao = DateTime.UtcNow.TruncateToMinutes();
             await _enqueteRepository.AddAsync(entity);
             return entity.Id;
         }
@@ -82,7 +84,7 @@ namespace WorkWell.Application.Services.Enquetes
             Id = dto.Id,
             EmpresaId = dto.EmpresaId,
             Pergunta = dto.Pergunta,
-            DataCriacao = dto.DataCriacao,
+            DataCriacao = dto.DataCriacao ?? DateTime.UtcNow.TruncateToMinutes(),
             Ativa = dto.Ativa
         };
 

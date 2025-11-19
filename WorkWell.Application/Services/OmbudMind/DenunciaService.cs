@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorkWell.Application.DTOs.OmbudMind;
 using WorkWell.Domain.Entities.OmbudMind;
+using WorkWell.Domain.Extensions;
 using WorkWell.Domain.Interfaces.OmbudMind;
 
 namespace WorkWell.Application.Services.OmbudMind
@@ -36,6 +37,7 @@ namespace WorkWell.Application.Services.OmbudMind
         public async Task<long> CreateAsync(DenunciaDto dto)
         {
             var entity = FromDto(dto);
+            entity.DataCriacao = DateTime.UtcNow.TruncateToMinutes();
             await _denunciaRepo.AddAsync(entity);
             return entity.Id;
         }
@@ -82,7 +84,7 @@ namespace WorkWell.Application.Services.OmbudMind
             EmpresaId = dto.EmpresaId,
             Tipo = dto.Tipo,
             Descricao = dto.Descricao,
-            DataCriacao = dto.DataCriacao,
+            DataCriacao = dto.DataCriacao ?? DateTime.UtcNow.TruncateToMinutes(),
             Status = dto.Status,
             CodigoRastreamento = dto.CodigoRastreamento
         };

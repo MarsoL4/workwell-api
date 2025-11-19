@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using WorkWell.Application.DTOs.AvaliacoesEmocionais;
 using WorkWell.Domain.Entities.AvaliacoesEmocionais;
 using WorkWell.Domain.Interfaces.AvaliacoesEmocionais;
+using WorkWell.Domain.Extensions; 
 
 namespace WorkWell.Application.Services.AvaliacoesEmocionais
 {
@@ -33,6 +34,7 @@ namespace WorkWell.Application.Services.AvaliacoesEmocionais
         public async Task<long> CreateAsync(MoodCheckDto dto)
         {
             var entity = FromDto(dto);
+            entity.DataRegistro = DateTime.UtcNow.TruncateToMinutes();
             await _repo.AddAsync(entity);
             return entity.Id;
         }
@@ -67,7 +69,7 @@ namespace WorkWell.Application.Services.AvaliacoesEmocionais
             Produtivo = d.Produtivo,
             Estressado = d.Estressado,
             DormiuBem = d.DormiuBem,
-            DataRegistro = d.DataRegistro
+            DataRegistro = d.DataRegistro ?? DateTime.UtcNow.TruncateToMinutes() // safe fallback
         };
     }
 }
