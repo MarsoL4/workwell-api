@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using WorkWell.API.Security;
+using System.Linq;
 
 namespace WorkWell.API.Extensions
 {
@@ -43,38 +44,51 @@ namespace WorkWell.API.Extensions
                     });
                 }
 
-                // Adicione explicitamente todas as combinações utilizadas nos controllers
-                options.AddPolicy("ApiKey_Funcionario_RH_Admin", policy =>
-                {
-                    policy.Requirements.Add(new ApiKeyRequirement("Funcionario", "RH", "Admin"));
-                });
+                // Adicione explicitamente todas as combinações usadas nos controllers (sempre em ordem alfabética):
 
+                // Admin + RH
                 options.AddPolicy("ApiKey_Admin_RH", policy =>
                 {
                     policy.Requirements.Add(new ApiKeyRequirement("Admin", "RH"));
                 });
 
-                options.AddPolicy("ApiKey_Funcionario_Psicologo_RH_Admin", policy =>
+                // Admin + Funcionario + RH
+                options.AddPolicy("ApiKey_Admin_Funcionario_RH", policy =>
                 {
-                    policy.Requirements.Add(new ApiKeyRequirement("Funcionario", "Psicologo", "RH", "Admin"));
+                    policy.Requirements.Add(new ApiKeyRequirement("Admin", "Funcionario", "RH"));
                 });
 
+                // Admin + Funcionario + Psicologo + RH
+                options.AddPolicy("ApiKey_Admin_Funcionario_Psicologo_RH", policy =>
+                {
+                    policy.Requirements.Add(new ApiKeyRequirement("Admin", "Funcionario", "Psicologo", "RH"));
+                });
+
+                // Funcionario + Psicologo + RH
                 options.AddPolicy("ApiKey_Funcionario_Psicologo_RH", policy =>
                 {
                     policy.Requirements.Add(new ApiKeyRequirement("Funcionario", "Psicologo", "RH"));
                 });
 
-                options.AddPolicy("ApiKey_Funcionario_Psicologo_RH_Admin", policy =>
+                // Funcionario + RH
+                options.AddPolicy("ApiKey_Funcionario_RH", policy =>
                 {
-                    policy.Requirements.Add(new ApiKeyRequirement("Funcionario", "Psicologo", "RH", "Admin"));
+                    policy.Requirements.Add(new ApiKeyRequirement("Funcionario", "RH"));
                 });
 
-                options.AddPolicy("ApiKey_Admin_RH_Funcionario", policy =>
+                // Admin + Psicologo + RH
+                options.AddPolicy("ApiKey_Admin_Psicologo_RH", policy =>
                 {
-                    policy.Requirements.Add(new ApiKeyRequirement("Admin", "RH", "Funcionario"));
+                    policy.Requirements.Add(new ApiKeyRequirement("Admin", "Psicologo", "RH"));
                 });
 
-                // Se necessário, adicione outras combinações encontradas nos controllers.
+                // Admin + Psicologo
+                options.AddPolicy("ApiKey_Admin_Psicologo", policy =>
+                {
+                    policy.Requirements.Add(new ApiKeyRequirement("Admin", "Psicologo"));
+                });
+
+                // Adicione combos em ordem alfabética se houver outros usos no futuro.
             });
 
             return services;

@@ -8,7 +8,8 @@ namespace WorkWell.API.Security
         {
             if (roles is { Length: > 0 })
             {
-                Policy = $"ApiKey_{string.Join("_", roles)}"; // UNDERSCORE!
+                // GARANTE policy name padronizada, ordem alfabética
+                Policy = $"ApiKey_{string.Join("_", roles.OrderBy(r => r))}";
             }
             else
             {
