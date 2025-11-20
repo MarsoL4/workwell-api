@@ -57,8 +57,8 @@ namespace WorkWell.API.Extensions
                     }
                 });
 
-                // ADICIONA filtro que documenta 401 global
-                options.OperationFilter<UnauthorizedResponseOperationFilter>();
+                // ADICIONA filtro de documentação global para respostas 401 e 403
+                options.OperationFilter<AuthorizeResponsesOperationFilter>();
             });
 
             // Registra exemplos do assembly
