@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using WorkWell.API.Controllers;
 using WorkWell.Application.Services.EmpresaOrganizacao;
 using WorkWell.Application.DTOs.EmpresaOrganizacao;
@@ -22,7 +23,13 @@ namespace WorkWell.Tests.Controllers
         [Fact]
         public async Task GetAllPaged_ReturnsOk()
         {
-            _serviceMock.Setup(x => x.GetAllPagedAsync(1, 10)).ReturnsAsync(new PagedResultDto<EmpresaDto>());
+            _controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
+            _serviceMock.Setup(x => x.GetAllPagedAsync(1, 10)).ReturnsAsync(new PagedResultDto<EmpresaDto>
+            {
+                Page = 1,
+                PageSize = 10,
+                TotalCount = 1
+            });
             var result = await _controller.GetAllPaged(1, 10);
             Assert.IsType<OkObjectResult>(result.Result);
         }
@@ -51,7 +58,7 @@ namespace WorkWell.Tests.Controllers
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<EmpresaDto>())).ReturnsAsync(77);
             var result = await _controller.Create(new EmpresaDto { Nome = "NN", EmailAdmin = "x", TokenAcesso = "y", LogoUrl = "", CorPrimaria = "", CorSecundaria = "", Missao = "", PoliticaBemEstar = "" });
             var action = Assert.IsType<CreatedAtActionResult>(result.Result);
-            Assert.Equal(77, action.Value);
+            Assert.Equal(77L, (long)(action.Value ?? 0L));
         }
 
         [Fact]

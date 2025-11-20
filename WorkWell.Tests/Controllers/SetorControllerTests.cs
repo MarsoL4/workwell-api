@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using WorkWell.API.Controllers;
 using WorkWell.Application.Services.EmpresaOrganizacao;
 using WorkWell.Application.DTOs.EmpresaOrganizacao;
@@ -22,7 +23,13 @@ namespace WorkWell.Tests.Controllers
         [Fact]
         public async Task GetAllPaged_ReturnsOk()
         {
-            _serviceMock.Setup(x => x.GetAllPagedAsync(1, 10)).ReturnsAsync(new PagedResultDto<SetorDto>());
+            _controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
+            _serviceMock.Setup(x => x.GetAllPagedAsync(1, 10)).ReturnsAsync(new PagedResultDto<SetorDto>
+            {
+                Page = 1,
+                PageSize = 10,
+                TotalCount = 1
+            });
             var result = await _controller.GetAllPaged(1, 10);
             Assert.IsType<OkObjectResult>(result.Result);
         }
@@ -50,7 +57,7 @@ namespace WorkWell.Tests.Controllers
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<SetorDto>())).ReturnsAsync(5);
             var result = await _controller.Create(new SetorDto { Nome = "Setor", EmpresaId = 10 });
             var created = Assert.IsType<CreatedAtActionResult>(result.Result);
-            Assert.Equal(5, created.Value);
+            Assert.Equal(5L, (long)(created.Value ?? 0L));
         }
 
         [Fact]

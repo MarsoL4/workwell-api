@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WorkWell.API.Controllers;
 using WorkWell.Application.Services.ApoioPsicologico;
 using WorkWell.Application.DTOs.ApoioPsicologico;
+using System.Collections.Generic;
 
 namespace WorkWell.Tests.Controllers
 {
@@ -49,7 +50,7 @@ namespace WorkWell.Tests.Controllers
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<ChatAnonimoDto>())).ReturnsAsync(9);
             var result = await _controller.Create(new ChatAnonimoDto { PsicologoId = 1, Mensagem = "msg", Anonimo = true });
             var created = Assert.IsType<CreatedAtActionResult>(result.Result);
-            Assert.Equal(9, created.Value);
+            Assert.Equal(9L, (long)(created.Value ?? 0L));
         }
 
         [Fact]
