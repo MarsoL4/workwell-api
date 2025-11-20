@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace WorkWell.API.Security
 {
@@ -26,7 +27,7 @@ namespace WorkWell.API.Security
 
             if (string.IsNullOrWhiteSpace(apiKey))
             {
-                context.Response.StatusCode = 401; // Unauthorized
+                context.Response.StatusCode = 401;
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync("{\"statusCode\":401,\"message\":\"API Key is missing\"}");
                 return;
@@ -35,6 +36,9 @@ namespace WorkWell.API.Security
             if (apiKey == _options.SuperKey)
             {
                 context.Items["ApiKeyRole"] = "Super";
+                // Set authenticated user ("Super")
+                context.User = new ClaimsPrincipal(new ClaimsIdentity(
+                    new[] { new Claim("ApiKeyRole", "Super") }, "ApiKeyScheme"));
             }
             else
             {
@@ -42,10 +46,13 @@ namespace WorkWell.API.Security
                 if (!string.IsNullOrEmpty(matched.Key))
                 {
                     context.Items["ApiKeyRole"] = matched.Key;
+                    // Set authenticated user for this role
+                    context.User = new ClaimsPrincipal(new ClaimsIdentity(
+                        new[] { new Claim("ApiKeyRole", matched.Key) }, "ApiKeyScheme"));
                 }
                 else
                 {
-                    context.Response.StatusCode = 403; // Forbidden
+                    context.Response.StatusCode = 403;
                     context.Response.ContentType = "application/json";
                     await context.Response.WriteAsync("{\"statusCode\":403,\"message\":\"Invalid API Key\"}");
                     return;
