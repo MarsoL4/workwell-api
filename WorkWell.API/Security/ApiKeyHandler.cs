@@ -34,9 +34,14 @@ namespace WorkWell.API.Security
                 return Task.CompletedTask;
             }
 
+            // Sucesso se qualquer role requerida está na policy
             if (requirement.Roles.Length == 0 || requirement.Roles.Contains(apiKeyRole))
             {
                 context.Succeed(requirement);
+            }
+            else
+            {
+                context.Fail(); // <<< Necessário para retornar 403 em vez de 401
             }
 
             return Task.CompletedTask;

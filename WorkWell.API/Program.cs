@@ -57,8 +57,19 @@ app.UseMiddleware<WorkWell.API.Middleware.ErrorHandlingMiddleware>();
 app.UseMiddleware<ApiKeyMiddleware>();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
+
+// Middleware para personalizar resposta 403 Forbidden (perm role)
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == 403 && !context.Response.HasStarted)
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync("{\"statusCode\":403,\"message\":\"Permissão insuficiente para este endpoint\"}");
+    }
+});
 
 using (var scope = app.Services.CreateScope())
 {

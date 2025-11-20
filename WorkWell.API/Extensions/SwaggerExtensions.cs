@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
+using WorkWell.API.Filters; 
 
 namespace WorkWell.API.Extensions
 {
@@ -55,6 +56,9 @@ namespace WorkWell.API.Extensions
                         new List<string>()
                     }
                 });
+
+                // ADICIONA filtro que documenta 401 global
+                options.OperationFilter<UnauthorizedResponseOperationFilter>();
             });
 
             // Registra exemplos do assembly

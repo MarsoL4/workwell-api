@@ -24,20 +24,33 @@ namespace WorkWell.API.Security
 
             string? apiKey = context.Request.Headers["X-API-KEY"].FirstOrDefault();
 
-            if (!string.IsNullOrEmpty(apiKey))
+            if (string.IsNullOrWhiteSpace(apiKey))
             {
-                if (apiKey == _options.SuperKey)
+                context.Response.StatusCode = 401; // Unauthorized
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync("{\"statusCode\":401,\"message\":\"API Key is missing\"}");
+                return;
+            }
+
+            if (apiKey == _options.SuperKey)
+            {
+                context.Items["ApiKeyRole"] = "Super";
+            }
+            else
+            {
+                var matched = _options.Keys.FirstOrDefault(kv => kv.Value == apiKey);
+                if (!string.IsNullOrEmpty(matched.Key))
                 {
-                    context.Items["ApiKeyRole"] = "Super";
+                    context.Items["ApiKeyRole"] = matched.Key;
                 }
                 else
                 {
-                    var matched = _options.Keys.FirstOrDefault(kv => kv.Value == apiKey);
-                    if (!string.IsNullOrEmpty(matched.Key))
-                        context.Items["ApiKeyRole"] = matched.Key;
+                    context.Response.StatusCode = 403; // Forbidden
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsync("{\"statusCode\":403,\"message\":\"Invalid API Key\"}");
+                    return;
                 }
             }
-            // Continua fluxo normal -- se não autenticado, será barrado por policies
 
             await _next(context);
         }
