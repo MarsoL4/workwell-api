@@ -9,6 +9,10 @@ using WorkWell.Infrastructure.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Dummy Auth para API Key
+builder.Services.AddAuthentication("ApiKeyScheme")
+    .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, DummyAuthenticationHandler>("ApiKeyScheme", _ => { });
+
 // Add Infrastructure and DbContext (Oracle connection)
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
@@ -49,7 +53,12 @@ app.UseSwaggerUI(options =>
 
 // Global Error + API Key Middlewares
 app.UseMiddleware<WorkWell.API.Middleware.ErrorHandlingMiddleware>();
+
 app.UseMiddleware<ApiKeyMiddleware>();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 using (var scope = app.Services.CreateScope())
 {
