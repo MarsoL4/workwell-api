@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using System.Linq;
 
 namespace WorkWell.API.Security
 {
@@ -9,7 +8,7 @@ namespace WorkWell.API.Security
         {
             if (roles is { Length: > 0 })
             {
-                Policy = string.Join(",", roles.Select(r => $"ApiKey_{r}"));
+                Policy = $"ApiKey_{string.Join("_", roles)}"; // UNDERSCORE!
             }
             else
             {

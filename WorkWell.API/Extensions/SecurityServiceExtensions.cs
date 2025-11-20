@@ -13,7 +13,6 @@ namespace WorkWell.API.Extensions
 
             var keyDict = new Dictionary<string, string>
             {
-                // Roles + suas chaves
                 { "Admin", apiKeysSection.GetValue<string>("Admin") ?? "admin-key" },
                 { "RH", apiKeysSection.GetValue<string>("RH") ?? "rh-key" },
                 { "Psicologo", apiKeysSection.GetValue<string>("Psicologo") ?? "psicologo-key" },
@@ -28,7 +27,7 @@ namespace WorkWell.API.Extensions
 
             services.AddSingleton<IAuthorizationHandler, ApiKeyHandler>();
 
-            // Policy para cada role
+            // Políticas básicas (isoladas)
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ApiKey", policy =>
@@ -43,6 +42,39 @@ namespace WorkWell.API.Extensions
                         policy.Requirements.Add(new ApiKeyRequirement(role));
                     });
                 }
+
+                // Adicione explicitamente todas as combinações utilizadas nos controllers
+                options.AddPolicy("ApiKey_Funcionario_RH_Admin", policy =>
+                {
+                    policy.Requirements.Add(new ApiKeyRequirement("Funcionario", "RH", "Admin"));
+                });
+
+                options.AddPolicy("ApiKey_Admin_RH", policy =>
+                {
+                    policy.Requirements.Add(new ApiKeyRequirement("Admin", "RH"));
+                });
+
+                options.AddPolicy("ApiKey_Funcionario_Psicologo_RH_Admin", policy =>
+                {
+                    policy.Requirements.Add(new ApiKeyRequirement("Funcionario", "Psicologo", "RH", "Admin"));
+                });
+
+                options.AddPolicy("ApiKey_Funcionario_Psicologo_RH", policy =>
+                {
+                    policy.Requirements.Add(new ApiKeyRequirement("Funcionario", "Psicologo", "RH"));
+                });
+
+                options.AddPolicy("ApiKey_Funcionario_Psicologo_RH_Admin", policy =>
+                {
+                    policy.Requirements.Add(new ApiKeyRequirement("Funcionario", "Psicologo", "RH", "Admin"));
+                });
+
+                options.AddPolicy("ApiKey_Admin_RH_Funcionario", policy =>
+                {
+                    policy.Requirements.Add(new ApiKeyRequirement("Admin", "RH", "Funcionario"));
+                });
+
+                // Se necessário, adicione outras combinações encontradas nos controllers.
             });
 
             return services;
