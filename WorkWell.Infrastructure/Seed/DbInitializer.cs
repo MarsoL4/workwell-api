@@ -26,7 +26,7 @@ namespace WorkWell.Infrastructure.Seed
             context.Database.EnsureCreated();
 
             // Evita duplicidade se já existir seed
-            if (context.Empresas.Any()) return;
+            if (context.Empresas.AsEnumerable().Any()) return;
 
             // --- Empresa e Setores
             var empresa = new Empresa
@@ -150,7 +150,7 @@ namespace WorkWell.Infrastructure.Seed
                 Psicologo = psic,
                 Mensagem = "Sinto-me sobrecarregado nas tarefas.",
                 DataEnvio = DateTime.Now,
-                Anonimo = true
+                Anonimo = true // bool C# será convertido corretamente em NUMBER(1) pelo EF (mapeamento via OnModelCreating)
             };
             context.ChatsAnonimos.Add(chat);
 
@@ -160,7 +160,7 @@ namespace WorkWell.Infrastructure.Seed
                 Funcionario = func,
                 DataAcionamento = DateTime.Now,
                 Tipo = "Crise de ansiedade",
-                PsicologoNotificado = true
+                PsicologoNotificado = true // bool C# para NUMBER(1)
             };
             context.SOSemergencias.Add(sos);
 
@@ -170,7 +170,7 @@ namespace WorkWell.Infrastructure.Seed
                 Empresa = empresa,
                 Pergunta = "Você está satisfeito com as condições de trabalho?",
                 DataCriacao = DateTime.Today,
-                Ativa = true
+                Ativa = true // bool C# para NUMBER(1)
             };
             context.Enquetes.Add(enquete);
             context.SaveChanges();
@@ -203,7 +203,7 @@ namespace WorkWell.Infrastructure.Seed
                 Funcionario = func,
                 Mensagem = "Você tem uma atividade planejada para amanhã!",
                 Tipo = TipoNotificacao.AlertaAtividade,
-                Lida = false,
+                Lida = false, // bool C# para NUMBER(1)
                 DataEnvio = DateTime.Now
             };
             context.Notificacoes.Add(notificacao);
@@ -279,7 +279,7 @@ namespace WorkWell.Infrastructure.Seed
                 EquipeResponsavel = "RH",
                 DataInicio = DateTime.Now,
                 MedidasAdotadas = "Conversas e orientação com as partes.",
-                Concluida = false
+                Concluida = false // bool C# para NUMBER(1)
             };
             context.InvestigacoesDenuncia.Add(investigacao);
 
