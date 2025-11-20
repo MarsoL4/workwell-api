@@ -477,7 +477,7 @@ namespace WorkWell.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SO_SEMERGENCIAS", x => x.Id);
+                    table.PrimaryKey("PK_SOS_EMERGENCIAS", x => x.Id);
                     table.ForeignKey(
                         name: "FK_SOS_EMERGENCIAS_FUNCIONARIOS_FuncionarioId",
                         column: x => x.FuncionarioId,

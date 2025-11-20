@@ -171,7 +171,7 @@ namespace WorkWell.Infrastructure.Migrations
 
                     b.HasIndex("FuncionarioId");
 
-                    b.ToTable("SO_SEMERGENCIAS", (string)null);
+                    b.ToTable("SOS_EMERGENCIAS", (string)null);
                 });
 
             modelBuilder.Entity("WorkWell.Domain.Entities.AtividadesBemEstar.AtividadeBemEstar", b =>

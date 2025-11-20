@@ -12,7 +12,7 @@ using WorkWell.Infrastructure.Persistence;
 namespace WorkWell.Infrastructure.Migrations
 {
     [DbContext(typeof(WorkWellDbContext))]
-    [Migration("20251119233457_InitialCreate")]
+    [Migration("20251120195956_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -174,7 +174,7 @@ namespace WorkWell.Infrastructure.Migrations
 
                     b.HasIndex("FuncionarioId");
 
-                    b.ToTable("SO_SEMERGENCIAS", (string)null);
+                    b.ToTable("SOS_EMERGENCIAS", (string)null);
                 });
 
             modelBuilder.Entity("WorkWell.Domain.Entities.AtividadesBemEstar.AtividadeBemEstar", b =>
