@@ -82,18 +82,35 @@ namespace WorkWell.Infrastructure.Persistence
             if (string.IsNullOrEmpty(name))
                 return name ?? string.Empty;
 
-            var sb = new StringBuilder(name.Length * 2);
+            // CORREÇÃO para nomes iniciados por "SOS"
+            if (name.StartsWith("SOS"))
+            {
+                // Exemplo: SOSemergencia, SOSemergencias, SOSemergenciaFoo -> SOS_EMERGENCIA(S)_FOO
+                var rest = name.Substring(3); // parte depois de "SOS"
+                var sb = new StringBuilder("SOS_");
+                for (int i = 0; i < rest.Length; i++)
+                {
+                    var c = rest[i];
+                    if (char.IsUpper(c) && i > 0)
+                        sb.Append('_');
+                    sb.Append(char.ToUpperInvariant(c));
+                }
+                return sb.ToString();
+            }
+
+            // Snake case PADRÃO para os demais
+            var sb2 = new StringBuilder(name.Length * 2);
             for (int i = 0; i < name.Length; i++)
             {
                 var c = name[i];
                 if (char.IsUpper(c) && i > 0 &&
                     (char.IsLower(name[i - 1]) || (i + 1 < name.Length && char.IsLower(name[i + 1]))))
                 {
-                    sb.Append('_');
+                    sb2.Append('_');
                 }
-                sb.Append(char.ToUpperInvariant(c));
+                sb2.Append(char.ToUpperInvariant(c));
             }
-            return sb.ToString();
+            return sb2.ToString();
         }
     }
 }
