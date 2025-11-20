@@ -24,10 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WorkWell.Application\WorkWell.Application.csproj" />
     <ProjectReference Include="..\WorkWell.Domain\WorkWell.Domain.csproj" />
-  </ItemGroup>
-	
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\WorkWell.API\WorkWell.API.csproj" />
   </ItemGroup>
 
 </Project>
