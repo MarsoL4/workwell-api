@@ -12,7 +12,7 @@ using WorkWell.Infrastructure.Persistence;
 namespace WorkWell.Infrastructure.Migrations
 {
     [DbContext(typeof(WorkWellDbContext))]
-    [Migration("20251120195956_InitialCreate")]
+    [Migration("20251121004140_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
