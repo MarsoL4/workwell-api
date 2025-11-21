@@ -44,7 +44,19 @@ namespace WorkWell.Application.Services.OmbudMind
 
         public async Task UpdateAsync(DenunciaDto dto)
         {
-            var entity = FromDto(dto);
+            // buscar a entidade já rastreada e atualizar nela
+            var entity = await _denunciaRepo.GetByIdAsync(dto.Id);
+            if (entity == null)
+                throw new KeyNotFoundException("Denúncia não encontrada.");
+
+            entity.FuncionarioDenuncianteId = dto.FuncionarioDenuncianteId;
+            entity.EmpresaId = dto.EmpresaId;
+            entity.Tipo = dto.Tipo;
+            entity.Descricao = dto.Descricao;
+            // MANTÉM DataCriacao existente
+            entity.Status = dto.Status;
+            entity.CodigoRastreamento = dto.CodigoRastreamento;
+
             await _denunciaRepo.UpdateAsync(entity);
         }
 
