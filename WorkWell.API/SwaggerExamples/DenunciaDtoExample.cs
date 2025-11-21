@@ -15,7 +15,8 @@ namespace WorkWell.API.SwaggerExamples
                 EmpresaId = 1,
                 Tipo = TipoDenuncia.AssedioMoral,
                 Descricao = "Relato de assédio moral pelo gestor.",
-                Status = StatusDenuncia.Aberta
+                Status = StatusDenuncia.Aberta,
+                CodigoRastreamento = "WW-2024-0001"
             };
         }
     }
