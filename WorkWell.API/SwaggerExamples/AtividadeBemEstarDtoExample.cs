@@ -11,13 +11,14 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new AtividadeBemEstarDto
             {
+                // Para POST, não enviar Id nem DataInicio/DataFim, mas para PUT exemplos pode usar:
                 EmpresaId = 1,
                 Tipo = TipoAtividade.PalestraBemEstar,
-                Titulo = "Semana Saúde Mental",
-                Descricao = "Palestra sobre saúde mental no ambiente corporativo.",
-                DataInicio = DateTime.UtcNow,
-                DataFim = DateTime.UtcNow.AddDays(1),
-                SetorAlvoId = 2
+                Titulo = "Palestra - Equilíbrio Trabalho/Vida",
+                Descricao = "Encontro sobre o futuro do trabalho saudável.",
+                DataInicio = DateTime.Today.AddDays(1).AddHours(10), // Igual ao seed
+                DataFim = DateTime.Today.AddDays(1).AddHours(11),
+                SetorAlvoId = 2 // TI
             };
         }
     }

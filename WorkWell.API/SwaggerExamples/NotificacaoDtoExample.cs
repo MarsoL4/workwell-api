@@ -1,7 +1,6 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.Notificacoes;
 using WorkWell.Domain.Enums.Notificacoes;
-using System;
 
 namespace WorkWell.API.SwaggerExamples
 {
@@ -11,9 +10,9 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new NotificacaoDto
             {
-                FuncionarioId = 20,
-                Mensagem = "Você tem uma nova consulta agendada.",
-                Tipo = TipoNotificacao.Consulta,
+                FuncionarioId = 4, // Carlos Silva
+                Mensagem = "Você tem uma atividade planejada para amanhã!",
+                Tipo = TipoNotificacao.AlertaAtividade,
                 Lida = false
             };
         }

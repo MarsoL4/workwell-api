@@ -1,6 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.ApoioPsicologico;
-using System;
 
 namespace WorkWell.API.SwaggerExamples
 {
@@ -10,9 +9,10 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new ChatAnonimoDto
             {
-                RemetenteId = 100,
-                PsicologoId = 201,
-                Mensagem = "Estou passando por dificuldades e gostaria de conversar.",
+                RemetenteId = 4,      // Carlos Silva
+                PsicologoId = 3,      // Dra. Helena
+                Mensagem = "Sinto-me sobrecarregado nas tarefas.", // Igual ao seed
+                // Não enviar DataEnvio para POST
                 Anonimo = true
             };
         }

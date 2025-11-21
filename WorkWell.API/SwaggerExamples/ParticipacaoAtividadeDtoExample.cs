@@ -1,6 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.AtividadesBemEstar;
-using System;
 
 namespace WorkWell.API.SwaggerExamples
 {
@@ -8,10 +7,10 @@ namespace WorkWell.API.SwaggerExamples
     {
         public ParticipacaoAtividadeDto GetExamples()
         {
+            // Para POST, AtividadeId é obtido via rota
             return new ParticipacaoAtividadeDto
             {
-                FuncionarioId = 100,
-                AtividadeId = 5,
+                FuncionarioId = 4,   // Carlos Silva
                 Participou = true
             };
         }

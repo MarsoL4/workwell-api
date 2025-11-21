@@ -10,10 +10,10 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new ItemAgendaDto
             {
-                AgendaFuncionarioId = 1,
+                // Para POST, não informar Id ou AgendaFuncionarioId, o id da Agenda será passado pela rota
                 Tipo = "atividade",
-                Titulo = "Palestra sobre Resiliência",
-                Horario = DateTime.Today.AddDays(2).AddHours(15)
+                Titulo = "Participação em palestra",
+                Horario = DateTime.Today.AddDays(1).AddHours(10)
             };
         }
     }

@@ -1,7 +1,6 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.OmbudMind;
 using WorkWell.Domain.Enums.OmbudMind;
-using System;
 
 namespace WorkWell.API.SwaggerExamples
 {
@@ -9,14 +8,14 @@ namespace WorkWell.API.SwaggerExamples
     {
         public DenunciaDto GetExamples()
         {
+            // Em POST não enviar Id/CodigoRastreamento/DataCriacao
             return new DenunciaDto
             {
-                FuncionarioDenuncianteId = null,
+                FuncionarioDenuncianteId = 4, // Carlos Silva
                 EmpresaId = 1,
                 Tipo = TipoDenuncia.AssedioMoral,
-                Descricao = "Fui vítima de assédio moral pelo gestor.",
-                Status = StatusDenuncia.Aberta,
-                CodigoRastreamento = "9CFD103BF9B7"
+                Descricao = "Relato de assédio moral pelo gestor.",
+                Status = StatusDenuncia.Aberta
             };
         }
     }

@@ -1,6 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.Enquetes;
-using System;
 
 namespace WorkWell.API.SwaggerExamples
 {

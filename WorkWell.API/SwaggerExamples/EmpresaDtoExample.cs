@@ -9,14 +9,14 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new EmpresaDto
             {
-                Nome = "Exemplo Ltda",
-                EmailAdmin = "admin@exemplo.com",
-                TokenAcesso = "token-exemplo-12345",
-                LogoUrl = "https://exemplo.com/logo.png",
-                CorPrimaria = "#0055CC",
+                Nome = "Futuro do Trabalho Ltda",
+                EmailAdmin = "admin@futurework.com",
+                TokenAcesso = "token-ftw-001",
+                LogoUrl = "https://futurework.com/logo.png",
+                CorPrimaria = "#1F77B4",
                 CorSecundaria = "#FFB800",
-                Missao = "Nossa missão é promover saúde em todos os níveis.",
-                PoliticaBemEstar = "Política clara de respeito e inclusão em toda a empresa."
+                Missao = "Transformar o bem-estar no ambiente de trabalho.",
+                PoliticaBemEstar = "Aqui o respeito e o cuidado são prioridades!"
             };
         }
     }

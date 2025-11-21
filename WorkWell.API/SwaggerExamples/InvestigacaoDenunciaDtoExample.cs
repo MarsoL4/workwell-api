@@ -10,11 +10,11 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new InvestigacaoDenunciaDto
             {
-                DenunciaId = 1,
+                // Para POST, não informar Id ou DataFim
+                DenunciaId = 1, // Única denúncia criada no seed
                 EquipeResponsavel = "RH",
-                DataInicio = DateTime.UtcNow,
-                DataFim = null,
-                MedidasAdotadas = "Afastamento provisório do acusado.",
+                DataInicio = DateTime.Today,
+                MedidasAdotadas = "Conversas e orientação com as partes.",
                 Concluida = false
             };
         }

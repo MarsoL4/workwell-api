@@ -1,6 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.AvaliacoesEmocionais;
-using System;
 
 namespace WorkWell.API.SwaggerExamples
 {
@@ -10,10 +9,10 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new PerfilEmocionalDto
             {
-                FuncionarioId = 101,
+                FuncionarioId = 4, // Carlos Silva
                 HumorInicial = "Bem",
-                Rotina = "Acorda às 7h, trabalha até 18h, faz caminhada no final do dia.",
-                PrincipaisEstressores = "Demandas em excesso e prazos curtos."
+                Rotina = "Home office, faz exercícios matinais.",
+                PrincipaisEstressores = "Excesso de reuniões."
             };
         }
     }

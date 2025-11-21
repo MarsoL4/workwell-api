@@ -1,6 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.AvaliacoesEmocionais;
-using System;
 
 namespace WorkWell.API.SwaggerExamples
 {
@@ -10,7 +9,7 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new RiscoPsicossocialDto
             {
-                FuncionarioId = 101,
+                FuncionarioId = 4, // Carlos Silva
                 Categoria = "Sobrecarga de trabalho",
                 NivelRisco = 3
             };

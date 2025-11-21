@@ -11,12 +11,12 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new ConsultaPsicologicaDto
             {
-                FuncionarioId = 100,
-                PsicologoId = 200,
-                DataConsulta = DateTime.UtcNow,
+                FuncionarioId = 4,            // Carlos Silva
+                PsicologoId = 3,              // Dra. Helena
+                DataConsulta = DateTime.Today.AddDays(2).AddHours(15), // igual seed
                 Tipo = TipoConsulta.Online,
                 Status = StatusConsulta.Agendada,
-                AnotacoesSigilosas = "Primeiro atendimento, traz sintomas de ansiedade."
+                AnotacoesSigilosas = "Primeira sessão, relata ansiedade."
             };
         }
     }

@@ -1,6 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.ApoioPsicologico;
-using System;
 
 namespace WorkWell.API.SwaggerExamples
 {
@@ -10,9 +9,9 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new SOSemergenciaDto
             {
-                FuncionarioId = 101,
-                DataAcionamento = DateTime.UtcNow,
+                FuncionarioId = 4, // Carlos Silva
                 Tipo = "Crise de ansiedade"
+                // Não enviar DataAcionamento ou PsicologoNotificado no POST
             };
         }
     }

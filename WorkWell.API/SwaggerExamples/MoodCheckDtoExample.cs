@@ -1,6 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.AvaliacoesEmocionais;
-using System;
 
 namespace WorkWell.API.SwaggerExamples
 {
@@ -10,7 +9,7 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new MoodCheckDto
             {
-                FuncionarioId = 101,
+                FuncionarioId = 4,   // Carlos Silva
                 Humor = 4,
                 Produtivo = true,
                 Estressado = false,

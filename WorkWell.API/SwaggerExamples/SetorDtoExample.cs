@@ -7,9 +7,10 @@ namespace WorkWell.API.SwaggerExamples
     {
         public SetorDto GetExamples()
         {
+            // Para POST, não enviar Id
             return new SetorDto
             {
-                Nome = "Recursos Humanos",
+                Nome = "RH",
                 EmpresaId = 1
             };
         }

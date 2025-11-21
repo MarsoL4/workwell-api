@@ -11,16 +11,15 @@ namespace WorkWell.API.SwaggerExamples
             return new IndicadoresEmpresaDto
             {
                 EmpresaId = 1,
-                HumorMedio = 3.8,
-                AdesaoAtividadesGeral = 0.75,
+                HumorMedio = 4.1,
+                AdesaoAtividadesGeral = 0.85,
                 FrequenciaConsultas = 0.21,
                 AdesaoPorSetor = new List<AdesaoSetorDto>
                 {
                     new AdesaoSetorDto
                     {
-                        Id = 1,
                         SetorId = 2,
-                        Adesao = 0.88
+                        Adesao = 0.90
                     }
                 }
             };

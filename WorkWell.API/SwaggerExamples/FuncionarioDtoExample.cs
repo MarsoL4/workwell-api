@@ -8,13 +8,14 @@ namespace WorkWell.API.SwaggerExamples
     {
         public FuncionarioDto GetExamples()
         {
+            // Para criar um novo funcionário (POST): não enviar Id
             return new FuncionarioDto
             {
-                Nome = "Maria Oliveira",
-                Email = "maria.oliveira@exemplo.com",
+                Nome = "Carlos Silva",
+                Email = "carlos@futurework.com",
                 Cargo = Cargo.Funcionario,
                 Ativo = true,
-                SetorId = 2
+                SetorId = 2 // TI
             };
         }
     }

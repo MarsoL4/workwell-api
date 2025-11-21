@@ -1,6 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WorkWell.Application.DTOs.AvaliacoesEmocionais;
-using System;
 
 namespace WorkWell.API.SwaggerExamples
 {
@@ -8,12 +7,13 @@ namespace WorkWell.API.SwaggerExamples
     {
         public AvaliacaoProfundaDto GetExamples()
         {
+            // Em POST, não incluir Id nem DataRegistro
             return new AvaliacaoProfundaDto
             {
-                FuncionarioId = 101,
-                Gad7Score = 4,
-                Phq9Score = 6,
-                Interpretacao = "Ansiedade leve, depressão leve."
+                FuncionarioId = 4, // Carlos Silva do seed
+                Gad7Score = 5,     // igual ao dado do seed para coerência
+                Phq9Score = 3,
+                Interpretacao = "Ansiedade leve"
             };
         }
     }

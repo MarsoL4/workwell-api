@@ -7,13 +7,14 @@ namespace WorkWell.API.SwaggerExamples
     {
         public PsicologoDto GetExamples()
         {
+            // Para POST, não enviar Id
             return new PsicologoDto
             {
                 Nome = "Dra. Helena Alves",
-                Email = "helena.alves@workwell.com",
+                Email = "helena.alves@futurework.com",
                 Crp = "06/123456",
                 Ativo = true,
-                SetorId = 2
+                SetorId = 1 // RH
             };
         }
     }

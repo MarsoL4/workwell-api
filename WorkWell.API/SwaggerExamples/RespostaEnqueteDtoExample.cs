@@ -7,10 +7,10 @@ namespace WorkWell.API.SwaggerExamples
     {
         public RespostaEnqueteDto GetExamples()
         {
+            // Para POST, EnqueteId é informado na rota!
             return new RespostaEnqueteDto
             {
-                EnqueteId = 1,
-                FuncionarioId = 100,
+                FuncionarioId = 4, // Carlos Silva
                 Resposta = "Sim"
             };
         }
