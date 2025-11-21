@@ -46,12 +46,19 @@ namespace WorkWell.API.Middleware
             {
                 _logger.LogError(ex, "Erro não tratado: {Message}", ex.Message);
 
-                // Novamente, context.Response jamais será nulo aqui no ASP.NET Core.
+                // Monta mensagem detalhada incluindo todas as inner exceptions (recursivamente)
+                string GetAllMessages(Exception e)
+                {
+                    if (e.InnerException == null)
+                        return $"{e.GetType().Name}: {e.Message}";
+                    return $"{e.GetType().Name}: {e.Message} | Inner: {GetAllMessages(e.InnerException)}";
+                }
+
                 var error = new
                 {
                     StatusCode = 500,
                     Message = "Ocorreu um erro inesperado.",
-                    Detail = ex.Message,
+                    Detail = GetAllMessages(ex),
                     TraceId = context.TraceIdentifier
                 };
                 context.Response.Clear();
