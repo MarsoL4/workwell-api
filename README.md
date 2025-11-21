@@ -63,8 +63,7 @@ A arquitetura segue boas práticas REST: uso de DTOs, controllers organizados po
   - RH: `rh-api-key`
   - Psicologo: `psicologo-api-key`
   - Funcionario: `funcionario-api-key`
-  - SuperApiKey: `super-api-key` (acesso irrestrito, cuidado!)
-- Troque as chaves no arquivo de configuração para produção e nunca exponha suas chaves.
+  - SuperApiKey: `super-api-key` (*acesso irrestrito para testes*)
 
 ---
 
