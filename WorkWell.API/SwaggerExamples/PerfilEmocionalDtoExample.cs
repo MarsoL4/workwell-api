@@ -9,7 +9,7 @@ namespace WorkWell.API.SwaggerExamples
         {
             return new PerfilEmocionalDto
             {
-                FuncionarioId = 4, // Carlos Silva
+                FuncionarioId = 3, // Roberta RH
                 HumorInicial = "Bem",
                 Rotina = "Home office, faz exercícios matinais.",
                 PrincipaisEstressores = "Excesso de reuniões."
