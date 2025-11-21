@@ -66,9 +66,11 @@ namespace WorkWell.Tests.Controllers
         public async Task Create_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<DenunciaDto>())).ReturnsAsync(19);
+            _serviceMock.Setup(x => x.GetByIdAsync(19)).ReturnsAsync(new DenunciaDto { Id = 19 });
             var result = await _controller.Create(new DenunciaDto());
             var created = Assert.IsType<CreatedAtActionResult>(result.Result);
-            Assert.Equal(19L, (long)(created.Value ?? 0L));
+            var createdDto = Assert.IsType<DenunciaDto>(created.Value);
+            Assert.Equal(19L, createdDto.Id);
         }
 
         [Fact]
@@ -113,12 +115,14 @@ namespace WorkWell.Tests.Controllers
         }
 
         [Fact]
-        public async Task AdicionarInvestigacao_ReturnsOk()
+        public async Task AdicionarInvestigacao_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.AdicionarInvestigacaoAsync(1, It.IsAny<InvestigacaoDenunciaDto>())).ReturnsAsync(23);
+            _serviceMock.Setup(x => x.GetInvestigacoesAsync(1)).ReturnsAsync(new List<InvestigacaoDenunciaDto> { new InvestigacaoDenunciaDto { Id = 23 } });
             var res = await _controller.AdicionarInvestigacao(1, new InvestigacaoDenunciaDto());
-            var ok = Assert.IsType<OkObjectResult>(res.Result);
-            Assert.Equal(23L, (long)(ok.Value ?? 0L));
+            var created = Assert.IsType<CreatedAtActionResult>(res.Result);
+            var createdDto = Assert.IsType<InvestigacaoDenunciaDto>(created.Value);
+            Assert.Equal(23L, createdDto.Id);
         }
     }
 }

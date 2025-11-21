@@ -56,15 +56,17 @@ namespace WorkWell.Tests.Controllers
         public async Task Create_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<EmpresaDto>())).ReturnsAsync(77);
-            var result = await _controller.Create(new EmpresaDto { Nome = "NN", EmailAdmin = "x", TokenAcesso = "y", LogoUrl = "", CorPrimaria = "", CorSecundaria = "", Missao = "", PoliticaBemEstar = "" });
+            _serviceMock.Setup(x => x.GetByIdAsync(77)).ReturnsAsync(new EmpresaDto { Id = 77, Nome = "NN", EmailAdmin = "x", SenhaAdmin = "y", TokenAcesso = "y", LogoUrl = "", CorPrimaria = "", CorSecundaria = "", Missao = "", PoliticaBemEstar = "" });
+            var result = await _controller.Create(new EmpresaDto { Nome = "NN", EmailAdmin = "x", SenhaAdmin = "y", TokenAcesso = "y", LogoUrl = "", CorPrimaria = "", CorSecundaria = "", Missao = "", PoliticaBemEstar = "" });
             var action = Assert.IsType<CreatedAtActionResult>(result.Result);
-            Assert.Equal(77L, (long)(action.Value ?? 0L));
+            var createdDto = Assert.IsType<EmpresaDto>(action.Value);
+            Assert.Equal(77L, createdDto.Id);
         }
 
         [Fact]
         public async Task Update_ReturnsNoContent_IfIdsOkAndExists()
         {
-            var dto = new EmpresaDto { Id = 2, Nome = "--", EmailAdmin = "x", TokenAcesso = "y", LogoUrl = "", CorPrimaria = "", CorSecundaria = "", Missao = "", PoliticaBemEstar = "" };
+            var dto = new EmpresaDto { Id = 2, Nome = "--", EmailAdmin = "x", SenhaAdmin = "y", TokenAcesso = "y", LogoUrl = "", CorPrimaria = "", CorSecundaria = "", Missao = "", PoliticaBemEstar = "" };
             _serviceMock.Setup(x => x.GetByIdAsync(2)).ReturnsAsync(dto);
             var result = await _controller.Update(2, dto);
             Assert.IsType<NoContentResult>(result);

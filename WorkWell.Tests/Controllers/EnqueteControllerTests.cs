@@ -54,9 +54,11 @@ namespace WorkWell.Tests.Controllers
         public async Task Create_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<EnqueteDto>())).ReturnsAsync(5);
+            _serviceMock.Setup(x => x.GetByIdAsync(5)).ReturnsAsync(new EnqueteDto { Id = 5, EmpresaId = 1, Pergunta = "Pergunta", Ativa = true });
             var result = await _controller.Create(new EnqueteDto { EmpresaId = 1, Pergunta = "Pergunta", Ativa = true });
             var created = Assert.IsType<CreatedAtActionResult>(result.Result);
-            Assert.Equal(5L, (long)(created.Value ?? 0L));
+            var createdDto = Assert.IsType<EnqueteDto>(created.Value);
+            Assert.Equal(5L, createdDto.Id);
         }
 
         [Fact]
@@ -91,13 +93,15 @@ namespace WorkWell.Tests.Controllers
         }
 
         [Fact]
-        public async Task AdicionarResposta_ReturnsOk()
+        public async Task AdicionarResposta_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.AdicionarRespostaAsync(11, It.IsAny<RespostaEnqueteDto>())).ReturnsAsync(78);
+            _serviceMock.Setup(x => x.GetRespostasAsync(11)).ReturnsAsync(new List<RespostaEnqueteDto> { new RespostaEnqueteDto { Id = 78, EnqueteId = 11, FuncionarioId = 9, Resposta = "resposta" } });
             var dto = new RespostaEnqueteDto { EnqueteId = 11, FuncionarioId = 9, Resposta = "resposta" };
             var result = await _controller.AdicionarResposta(11, dto);
-            var ok = Assert.IsType<OkObjectResult>(result.Result);
-            Assert.Equal(78L, (long)(ok.Value ?? 0L));
+            var created = Assert.IsType<CreatedAtActionResult>(result.Result);
+            var rspDto = Assert.IsType<RespostaEnqueteDto>(created.Value);
+            Assert.Equal(78L, rspDto.Id);
         }
     }
 }

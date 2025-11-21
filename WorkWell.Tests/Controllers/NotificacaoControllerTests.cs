@@ -64,9 +64,11 @@ namespace WorkWell.Tests.Controllers
         public async Task Create_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<NotificacaoDto>())).ReturnsAsync(31);
+            _serviceMock.Setup(x => x.GetByIdAsync(31)).ReturnsAsync(new NotificacaoDto { Id = 31, FuncionarioId = 1, Mensagem = "mens", Tipo = Domain.Enums.Notificacoes.TipoNotificacao.Consulta, Lida = false });
             var result = await _controller.Create(new NotificacaoDto { FuncionarioId = 1, Mensagem = "mens", Tipo = Domain.Enums.Notificacoes.TipoNotificacao.Consulta, Lida = false });
             var created = Assert.IsType<CreatedAtActionResult>(result.Result);
-            Assert.Equal(31L, (long)(created.Value ?? 0L));
+            var createdDto = Assert.IsType<NotificacaoDto>(created.Value);
+            Assert.Equal(31L, createdDto.Id);
         }
 
         [Fact]
