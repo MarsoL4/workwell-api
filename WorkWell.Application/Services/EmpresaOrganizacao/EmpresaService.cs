@@ -67,20 +67,23 @@ namespace WorkWell.Application.Services.EmpresaOrganizacao
 
         public async Task UpdateAsync(EmpresaDto empresaDto)
         {
-            var empresa = new Empresa
-            {
-                Id = empresaDto.Id,
-                Nome = empresaDto.Nome,
-                EmailAdmin = empresaDto.EmailAdmin,
-                SenhaAdmin = empresaDto.SenhaAdmin,
-                TokenAcesso = empresaDto.TokenAcesso,
-                LogoUrl = empresaDto.LogoUrl,
-                CorPrimaria = empresaDto.CorPrimaria,
-                CorSecundaria = empresaDto.CorSecundaria,
-                Missao = empresaDto.Missao,
-                PoliticaBemEstar = empresaDto.PoliticaBemEstar
-            };
-            await _empresaRepository.UpdateAsync(empresa);
+            // Busca a entidade existente para evitar error de tracking duplicado no EF Core
+            var empresaExistente = await _empresaRepository.GetByIdAsync(empresaDto.Id);
+            if (empresaExistente == null)
+                throw new KeyNotFoundException("Empresa não encontrada.");
+
+            // Atualiza apenas os campos permitidos
+            empresaExistente.Nome = empresaDto.Nome;
+            empresaExistente.EmailAdmin = empresaDto.EmailAdmin;
+            empresaExistente.SenhaAdmin = empresaDto.SenhaAdmin;
+            empresaExistente.TokenAcesso = empresaDto.TokenAcesso;
+            empresaExistente.LogoUrl = empresaDto.LogoUrl;
+            empresaExistente.CorPrimaria = empresaDto.CorPrimaria;
+            empresaExistente.CorSecundaria = empresaDto.CorSecundaria;
+            empresaExistente.Missao = empresaDto.Missao;
+            empresaExistente.PoliticaBemEstar = empresaDto.PoliticaBemEstar;
+
+            await _empresaRepository.UpdateAsync(empresaExistente);
         }
 
         public async Task DeleteAsync(long id)
