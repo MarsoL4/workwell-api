@@ -53,6 +53,7 @@ namespace WorkWell.Application.Services.EmpresaOrganizacao
             {
                 Nome = empresaDto.Nome,
                 EmailAdmin = empresaDto.EmailAdmin,
+                SenhaAdmin = empresaDto.SenhaAdmin,
                 TokenAcesso = empresaDto.TokenAcesso,
                 LogoUrl = empresaDto.LogoUrl,
                 CorPrimaria = empresaDto.CorPrimaria,
@@ -71,6 +72,7 @@ namespace WorkWell.Application.Services.EmpresaOrganizacao
                 Id = empresaDto.Id,
                 Nome = empresaDto.Nome,
                 EmailAdmin = empresaDto.EmailAdmin,
+                SenhaAdmin = empresaDto.SenhaAdmin,
                 TokenAcesso = empresaDto.TokenAcesso,
                 LogoUrl = empresaDto.LogoUrl,
                 CorPrimaria = empresaDto.CorPrimaria,
@@ -93,6 +95,7 @@ namespace WorkWell.Application.Services.EmpresaOrganizacao
                 Id = empresa.Id,
                 Nome = empresa.Nome,
                 EmailAdmin = empresa.EmailAdmin,
+                SenhaAdmin = empresa.SenhaAdmin,
                 TokenAcesso = empresa.TokenAcesso,
                 LogoUrl = empresa.LogoUrl,
                 CorPrimaria = empresa.CorPrimaria,

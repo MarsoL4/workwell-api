@@ -11,6 +11,7 @@ namespace WorkWell.API.SwaggerExamples
             {
                 Nome = "Futuro do Trabalho Ltda",
                 EmailAdmin = "admin@futurework.com",
+                SenhaAdmin = "admin123",
                 TokenAcesso = "token-ftw-001",
                 LogoUrl = "https://futurework.com/logo.png",
                 CorPrimaria = "#1F77B4",
