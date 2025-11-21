@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using Moq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using WorkWell.API.Controllers;
 using WorkWell.Application.Services.EmpresaOrganizacao;
 using WorkWell.Application.DTOs.EmpresaOrganizacao;
@@ -23,6 +24,7 @@ namespace WorkWell.Tests.Controllers
         [Fact]
         public async Task GetAllPaged_ReturnsOk()
         {
+            _controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
             _serviceMock.Setup(x => x.GetAllPagedAsync(1, 10)).ReturnsAsync(new PagedResultDto<SetorDto>
             {
                 Page = 1,
@@ -30,7 +32,7 @@ namespace WorkWell.Tests.Controllers
                 TotalCount = 1
             });
             var result = await _controller.GetAllPaged(1, 10);
-            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<OkObjectResult>(result.Result);
         }
 
         [Fact]
@@ -38,7 +40,7 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetByIdAsync(123)).ReturnsAsync(new SetorDto { Id = 123 });
             var result = await _controller.GetById(123);
-            var ok = Assert.IsType<OkObjectResult>(result);
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
             Assert.IsType<SetorDto>(ok.Value);
         }
 
@@ -47,16 +49,18 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetByIdAsync(10)).ReturnsAsync((SetorDto?)null);
             var result = await _controller.GetById(10);
-            Assert.IsType<NotFoundObjectResult>(result);
+            Assert.IsType<NotFoundObjectResult>(result.Result);
         }
 
         [Fact]
         public async Task Create_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<SetorDto>())).ReturnsAsync(5);
+            _serviceMock.Setup(x => x.GetByIdAsync(5)).ReturnsAsync(new SetorDto { Id = 5 });
             var result = await _controller.Create(new SetorDto { Nome = "Setor", EmpresaId = 10 });
-            var created = Assert.IsType<CreatedAtActionResult>(result);
-            Assert.Equal(5L, (long)(created.Value ?? 0L));
+            var created = Assert.IsType<CreatedAtActionResult>(result.Result);
+            var createdDto = Assert.IsType<SetorDto>(created.Value);
+            Assert.Equal(5L, createdDto.Id);
         }
 
         [Fact]

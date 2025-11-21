@@ -32,7 +32,7 @@ namespace WorkWell.Tests.Controllers
                     TotalCount = 1
                 });
             var result = await _controller.GetAllPaged(1, 10);
-            Assert.IsType<OkObjectResult>(result);
+            Assert.IsType<OkObjectResult>(result.Result);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetByIdAsync(22)).ReturnsAsync(new PsicologoDto { Id = 22 });
             var result = await _controller.GetById(22);
-            var ok = Assert.IsType<OkObjectResult>(result);
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
             Assert.IsType<PsicologoDto>(ok.Value);
         }
 
@@ -49,16 +49,18 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetByIdAsync(44)).ReturnsAsync((PsicologoDto?)null);
             var result = await _controller.GetById(44);
-            Assert.IsType<NotFoundObjectResult>(result);
+            Assert.IsType<NotFoundObjectResult>(result.Result);
         }
 
         [Fact]
         public async Task Create_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<PsicologoDto>())).ReturnsAsync(51);
+            _serviceMock.Setup(x => x.GetByIdAsync(51)).ReturnsAsync(new PsicologoDto { Id = 51 });
             var result = await _controller.Create(new PsicologoDto { Nome = "Psico", Email = "e@e.com", Crp = "1", Ativo = true, SetorId = 1, Senha = "", TokenEmpresa = "" });
-            var created = Assert.IsType<CreatedAtActionResult>(result);
-            Assert.Equal(51L, (long)(created.Value ?? 0L));
+            var created = Assert.IsType<CreatedAtActionResult>(result.Result);
+            var createdDto = Assert.IsType<PsicologoDto>(created.Value);
+            Assert.Equal(51L, createdDto.Id);
         }
 
         [Fact]

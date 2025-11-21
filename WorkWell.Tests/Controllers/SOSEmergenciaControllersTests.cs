@@ -26,7 +26,8 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<SOSemergenciaDto>());
             var result = await _controller.GetAll();
-            Assert.IsType<OkObjectResult>(result);
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
+            Assert.IsAssignableFrom<IEnumerable<SOSemergenciaDto>>(ok.Value);
         }
 
         [Fact]
@@ -34,7 +35,7 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetByIdAsync(8)).ReturnsAsync(new SOSemergenciaDto { Id = 8 });
             var result = await _controller.GetById(8);
-            var ok = Assert.IsType<OkObjectResult>(result);
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
             Assert.IsType<SOSemergenciaDto>(ok.Value);
         }
 
@@ -43,16 +44,18 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetByIdAsync(99)).ReturnsAsync((SOSemergenciaDto?)null);
             var result = await _controller.GetById(99);
-            Assert.IsType<NotFoundObjectResult>(result);
+            Assert.IsType<NotFoundObjectResult>(result.Result);
         }
 
         [Fact]
         public async Task Create_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<SOSemergenciaDto>())).ReturnsAsync(44);
+            _serviceMock.Setup(x => x.GetByIdAsync(44)).ReturnsAsync(new SOSemergenciaDto { Id = 44, FuncionarioId = 11, Tipo = "Crise", DataAcionamento = DateTime.Now });
             var result = await _controller.Create(new SOSemergenciaDto { FuncionarioId = 11, Tipo = "Crise", DataAcionamento = DateTime.Now });
-            var created = Assert.IsType<CreatedAtActionResult>(result);
-            Assert.Equal(44L, (long)(created.Value ?? 0L));
+            var created = Assert.IsType<CreatedAtActionResult>(result.Result);
+            var createdDto = Assert.IsType<SOSemergenciaDto>(created.Value);
+            Assert.Equal(44L, createdDto.Id);
         }
 
         [Fact]

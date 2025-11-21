@@ -25,7 +25,8 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<AgendaFuncionarioDto>());
             var result = await _controller.GetAll();
-            Assert.IsType<OkObjectResult>(result.Result);
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
+            Assert.IsAssignableFrom<IEnumerable<AgendaFuncionarioDto>>(ok.Value);
         }
 
         [Fact]
@@ -49,9 +50,8 @@ namespace WorkWell.Tests.Controllers
         public async Task Create_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<AgendaFuncionarioDto>())).ReturnsAsync(99);
-            var dto = new AgendaFuncionarioDto { FuncionarioId = 123, Data = DateTime.Today, Itens = new List<ItemAgendaDto>() };
             _serviceMock.Setup(x => x.GetByIdAsync(99)).ReturnsAsync(new AgendaFuncionarioDto { Id = 99, FuncionarioId = 123, Data = DateTime.Today });
-            var result = await _controller.Create(dto);
+            var result = await _controller.Create(new AgendaFuncionarioDto { FuncionarioId = 123, Data = DateTime.Today, Itens = new List<ItemAgendaDto>() });
             var created = Assert.IsType<CreatedAtActionResult>(result.Result);
             var createdDto = Assert.IsType<AgendaFuncionarioDto>(created.Value);
             Assert.Equal(99L, createdDto.Id);
@@ -85,17 +85,18 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetItensAsync(66)).ReturnsAsync(new List<ItemAgendaDto>());
             var result = await _controller.GetItens(66);
-            Assert.IsType<OkObjectResult>(result.Result);
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
+            Assert.IsAssignableFrom<IEnumerable<ItemAgendaDto>>(ok.Value);
         }
 
         [Fact]
-        public async Task AdicionarItem_ReturnsCreated()
+        public async Task AdicionarItem_ReturnsOk() // controller retorna OkObjectResult
         {
             _serviceMock.Setup(x => x.AdicionarItemAsync(1, It.IsAny<ItemAgendaDto>())).ReturnsAsync(77);
             _serviceMock.Setup(x => x.GetItensAsync(1)).ReturnsAsync(new List<ItemAgendaDto> { new ItemAgendaDto { Id = 77, Tipo = "atividade", Titulo = "Título", Horario = DateTime.Now } });
             var result = await _controller.AdicionarItem(1, new ItemAgendaDto { Tipo = "atividade", Titulo = "Título", Horario = DateTime.Now });
-            var created = Assert.IsType<CreatedAtActionResult>(result.Result);
-            var itemDto = Assert.IsType<ItemAgendaDto>(created.Value);
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
+            var itemDto = Assert.IsType<ItemAgendaDto>(ok.Value);
             Assert.Equal(77L, itemDto.Id);
         }
     }

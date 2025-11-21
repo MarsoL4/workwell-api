@@ -25,7 +25,8 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetAllAsync()).ReturnsAsync(new List<AtividadeBemEstarDto>());
             var result = await _controller.GetAll();
-            Assert.IsType<OkObjectResult>(result);
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
+            Assert.IsAssignableFrom<IEnumerable<AtividadeBemEstarDto>>(ok.Value);
         }
 
         [Fact]
@@ -33,7 +34,7 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetByIdAsync(17)).ReturnsAsync(new AtividadeBemEstarDto { Id = 17 });
             var result = await _controller.GetById(17);
-            var ok = Assert.IsType<OkObjectResult>(result);
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
             Assert.IsType<AtividadeBemEstarDto>(ok.Value);
         }
 
@@ -42,16 +43,19 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetByIdAsync(88)).ReturnsAsync((AtividadeBemEstarDto?)null);
             var result = await _controller.GetById(88);
-            Assert.IsType<NotFoundObjectResult>(result);
+            Assert.IsType<NotFoundObjectResult>(result.Result);
         }
 
         [Fact]
         public async Task Create_ReturnsCreated()
         {
             _serviceMock.Setup(x => x.CreateAsync(It.IsAny<AtividadeBemEstarDto>())).ReturnsAsync(15);
-            var result = await _controller.Create(new AtividadeBemEstarDto { EmpresaId = 1, Titulo = "X", Tipo = 0, Descricao = "", DataInicio = System.DateTime.Now, DataFim = System.DateTime.Now });
-            var created = Assert.IsType<CreatedAtActionResult>(result);
-            Assert.Equal(15L, (long)(created.Value ?? 0L));
+            _serviceMock.Setup(x => x.GetByIdAsync(15)).ReturnsAsync(new AtividadeBemEstarDto { Id = 15 });
+            var dto = new AtividadeBemEstarDto { EmpresaId = 1, Titulo = "X", Tipo = 0, Descricao = "", DataInicio = System.DateTime.Now, DataFim = System.DateTime.Now };
+            var result = await _controller.Create(dto);
+            var created = Assert.IsType<CreatedAtActionResult>(result.Result);
+            var createdDto = Assert.IsType<AtividadeBemEstarDto>(created.Value);
+            Assert.Equal(15L, createdDto.Id);
         }
 
         [Fact]
@@ -100,17 +104,20 @@ namespace WorkWell.Tests.Controllers
         {
             _serviceMock.Setup(x => x.GetParticipacoesAsync(32)).ReturnsAsync(new List<ParticipacaoAtividadeDto>());
             var result = await _controller.GetParticipacoes(32);
-            Assert.IsType<OkObjectResult>(result);
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
+            Assert.IsAssignableFrom<IEnumerable<ParticipacaoAtividadeDto>>(ok.Value);
         }
 
         [Fact]
-        public async Task Participar_ReturnsOk()
+        public async Task Participar_ReturnsOk() // controller devolve Ok
         {
             _serviceMock.Setup(x => x.AdicionarParticipacaoAsync(2, It.IsAny<ParticipacaoAtividadeDto>())).ReturnsAsync(111);
+            _serviceMock.Setup(x => x.GetParticipacoesAsync(2)).ReturnsAsync(new List<ParticipacaoAtividadeDto> { new ParticipacaoAtividadeDto { Id = 111, FuncionarioId = 23, Participou = true } });
             var dto = new ParticipacaoAtividadeDto { FuncionarioId = 23, Participou = true };
             var result = await _controller.Participar(2, dto);
-            var ok = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(111L, (long)(ok.Value ?? 0L));
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
+            var partDto = Assert.IsType<ParticipacaoAtividadeDto>(ok.Value);
+            Assert.Equal(111L, partDto.Id);
         }
     }
 }
