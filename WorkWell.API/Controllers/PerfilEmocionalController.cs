@@ -48,12 +48,13 @@ namespace WorkWell.API.Controllers
 
         [HttpPost]
         [SwaggerRequestExample(typeof(PerfilEmocionalDto), typeof(PerfilEmocionalDtoExample))]
-        [SwaggerResponse(201, "Perfil criado com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 201)]
-        public async Task<ActionResult<long>> Create(PerfilEmocionalDto dto)
+        [SwaggerResponse(201, "Perfil criado com sucesso", typeof(PerfilEmocionalDto))]
+        [ProducesResponseType(typeof(PerfilEmocionalDto), 201)]
+        public async Task<ActionResult<PerfilEmocionalDto>> Create(PerfilEmocionalDto dto)
         {
             var id = await _perfilService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var perfilCriado = await _perfilService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, perfilCriado);
         }
 
         [HttpPut("{id:long}")]

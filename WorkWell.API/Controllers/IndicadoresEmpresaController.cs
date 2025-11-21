@@ -60,12 +60,13 @@ namespace WorkWell.API.Controllers
         /// </summary>
         [HttpPost]
         [SwaggerRequestExample(typeof(IndicadoresEmpresaDto), typeof(IndicadoresEmpresaDtoExample))]
-        [SwaggerResponse(201, "Indicadores criados com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 201)]
-        public async Task<ActionResult<long>> Create(IndicadoresEmpresaDto dto)
+        [SwaggerResponse(201, "Indicadores criados com sucesso", typeof(IndicadoresEmpresaDto))]
+        [ProducesResponseType(typeof(IndicadoresEmpresaDto), 201)]
+        public async Task<ActionResult<IndicadoresEmpresaDto>> Create(IndicadoresEmpresaDto dto)
         {
             var id = await _indicadoresService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var entityCriada = await _indicadoresService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, entityCriada);
         }
 
         /// <summary>

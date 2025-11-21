@@ -60,14 +60,15 @@ namespace WorkWell.API.Controllers
         /// </remarks>
         [HttpPost]
         [SwaggerRequestExample(typeof(AvaliacaoProfundaDto), typeof(AvaliacaoProfundaDtoExample))]
-        [SwaggerResponse(201, "Avaliação criada com sucesso", typeof(long))]
+        [SwaggerResponse(201, "Avaliação criada com sucesso", typeof(AvaliacaoProfundaDto))]
         [SwaggerResponse(400, "Dados inválidos")]
-        [ProducesResponseType(typeof(long), 201)]
+        [ProducesResponseType(typeof(AvaliacaoProfundaDto), 201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<long>> Create(AvaliacaoProfundaDto dto)
+        public async Task<ActionResult<AvaliacaoProfundaDto>> Create(AvaliacaoProfundaDto dto)
         {
             var id = await _avaliacaoService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var entityCriada = await _avaliacaoService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, entityCriada);
         }
 
         /// <summary>

@@ -60,14 +60,15 @@ namespace WorkWell.API.Controllers
         /// </remarks>
         [HttpPost]
         [SwaggerRequestExample(typeof(AgendaFuncionarioDto), typeof(AgendaFuncionarioDtoExample))]
-        [SwaggerResponse(201, "Agenda criada com sucesso", typeof(long))]
+        [SwaggerResponse(201, "Agenda criada com sucesso", typeof(AgendaFuncionarioDto))]
         [SwaggerResponse(400, "Dados inválidos")]
-        [ProducesResponseType(typeof(long), 201)]
+        [ProducesResponseType(typeof(AgendaFuncionarioDto), 201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<long>> Create(AgendaFuncionarioDto dto)
+        public async Task<ActionResult<AgendaFuncionarioDto>> Create(AgendaFuncionarioDto dto)
         {
             var id = await _agendaService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var agendaCriada = await _agendaService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, agendaCriada);
         }
 
         /// <summary>
@@ -122,12 +123,13 @@ namespace WorkWell.API.Controllers
         /// </remarks>
         [HttpPost("{agendaId:long}/itens")]
         [SwaggerRequestExample(typeof(ItemAgendaDto), typeof(ItemAgendaDtoExample))]
-        [SwaggerResponse(200, "Item criado com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 200)]
-        public async Task<ActionResult<long>> AdicionarItem(long agendaId, ItemAgendaDto dto)
+        [SwaggerResponse(200, "Item criado com sucesso", typeof(ItemAgendaDto))]
+        [ProducesResponseType(typeof(ItemAgendaDto), 200)]
+        public async Task<ActionResult<ItemAgendaDto>> AdicionarItem(long agendaId, ItemAgendaDto dto)
         {
             var id = await _agendaService.AdicionarItemAsync(agendaId, dto);
-            return Ok(id);
+            var itemCriado = (await _agendaService.GetItensAsync(agendaId)).FirstOrDefault(i => i.Id == id);
+            return Ok(itemCriado);
         }
     }
 }

@@ -60,12 +60,13 @@ namespace WorkWell.API.Controllers
 
         [HttpPost]
         [SwaggerRequestExample(typeof(NotificacaoDto), typeof(NotificacaoDtoExample))]
-        [SwaggerResponse(201, "Notificação criada com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 201)]
-        public async Task<ActionResult<long>> Create(NotificacaoDto dto)
+        [SwaggerResponse(201, "Notificação criada com sucesso", typeof(NotificacaoDto))]
+        [ProducesResponseType(typeof(NotificacaoDto), 201)]
+        public async Task<ActionResult<NotificacaoDto>> Create(NotificacaoDto dto)
         {
             var id = await _notificacaoService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var notificacaoCriada = await _notificacaoService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, notificacaoCriada);
         }
 
         [HttpPut("{id:long}")]

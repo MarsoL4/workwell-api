@@ -58,12 +58,13 @@ namespace WorkWell.API.Controllers
         /// </summary>
         [HttpPost]
         [SwaggerRequestExample(typeof(EnqueteDto), typeof(EnqueteDtoExample))]
-        [SwaggerResponse(201, "Enquete criada com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 201)]
-        public async Task<ActionResult<long>> Create(EnqueteDto dto)
+        [SwaggerResponse(201, "Enquete criada com sucesso", typeof(EnqueteDto))]
+        [ProducesResponseType(typeof(EnqueteDto), 201)]
+        public async Task<ActionResult<EnqueteDto>> Create(EnqueteDto dto)
         {
             var id = await _enqueteService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var enqueteCriada = await _enqueteService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, enqueteCriada);
         }
 
         /// <summary>
@@ -112,12 +113,13 @@ namespace WorkWell.API.Controllers
         /// </summary>
         [HttpPost("{enqueteId:long}/respostas")]
         [SwaggerRequestExample(typeof(RespostaEnqueteDto), typeof(RespostaEnqueteDtoExample))]
-        [SwaggerResponse(201, "Resposta registrada com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 201)]
-        public async Task<ActionResult<long>> AdicionarResposta(long enqueteId, RespostaEnqueteDto dto)
+        [SwaggerResponse(201, "Resposta registrada com sucesso", typeof(RespostaEnqueteDto))]
+        [ProducesResponseType(typeof(RespostaEnqueteDto), 201)]
+        public async Task<ActionResult<RespostaEnqueteDto>> AdicionarResposta(long enqueteId, RespostaEnqueteDto dto)
         {
             var id = await _enqueteService.AdicionarRespostaAsync(enqueteId, dto);
-            return Ok(id);
+            var respostaCriada = (await _enqueteService.GetRespostasAsync(enqueteId)).FirstOrDefault(r => r.Id == id);
+            return CreatedAtAction(nameof(GetRespostas), new { enqueteId }, respostaCriada);
         }
     }
 }

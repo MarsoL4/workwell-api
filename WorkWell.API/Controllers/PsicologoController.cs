@@ -49,12 +49,13 @@ namespace WorkWell.API.Controllers
 
         [HttpPost]
         [SwaggerRequestExample(typeof(PsicologoDto), typeof(PsicologoDtoExample))]
-        [SwaggerResponse(201, "Psicólogo criado com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 201)]
-        public async Task<ActionResult<long>> Create(PsicologoDto dto)
+        [SwaggerResponse(201, "Psicólogo criado com sucesso", typeof(PsicologoDto))]
+        [ProducesResponseType(typeof(PsicologoDto), 201)]
+        public async Task<ActionResult<PsicologoDto>> Create(PsicologoDto dto)
         {
             var id = await _psicologoService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var psicologoCriado = await _psicologoService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, psicologoCriado);
         }
 
         [HttpPut("{id:long}")]

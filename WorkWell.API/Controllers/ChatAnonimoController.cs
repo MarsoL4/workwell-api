@@ -60,14 +60,15 @@ namespace WorkWell.API.Controllers
         /// </remarks>
         [HttpPost]
         [SwaggerRequestExample(typeof(ChatAnonimoDto), typeof(ChatAnonimoDtoExample))]
-        [SwaggerResponse(201, "Chat criado com sucesso", typeof(long))]
+        [SwaggerResponse(201, "Chat criado com sucesso", typeof(ChatAnonimoDto))]
         [SwaggerResponse(400, "Dados inválidos")]
-        [ProducesResponseType(typeof(long), 201)]
+        [ProducesResponseType(typeof(ChatAnonimoDto), 201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<long>> Create(ChatAnonimoDto dto)
+        public async Task<ActionResult<ChatAnonimoDto>> Create(ChatAnonimoDto dto)
         {
             var id = await _chatService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var chatCriado = await _chatService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, chatCriado);
         }
 
         /// <summary>

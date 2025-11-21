@@ -71,14 +71,15 @@ namespace WorkWell.API.Controllers
         /// </summary>
         [HttpPost]
         [SwaggerRequestExample(typeof(DenunciaDto), typeof(DenunciaDtoExample))]
-        [SwaggerResponse(201, "Denúncia criada com sucesso", typeof(long))]
+        [SwaggerResponse(201, "Denúncia criada com sucesso", typeof(DenunciaDto))]
         [SwaggerResponse(400, "Dados inválidos")]
-        [ProducesResponseType(typeof(long), 201)]
+        [ProducesResponseType(typeof(DenunciaDto), 201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<long>> Create(DenunciaDto dto)
+        public async Task<ActionResult<DenunciaDto>> Create(DenunciaDto dto)
         {
             var id = await _denunciaService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var denunciaCriada = await _denunciaService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, denunciaCriada);
         }
 
         /// <summary>
@@ -132,12 +133,13 @@ namespace WorkWell.API.Controllers
         /// </summary>
         [HttpPost("{denunciaId:long}/investigacoes")]
         [SwaggerRequestExample(typeof(InvestigacaoDenunciaDto), typeof(InvestigacaoDenunciaDtoExample))]
-        [SwaggerResponse(201, "Investigação criada com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 201)]
-        public async Task<ActionResult<long>> AdicionarInvestigacao(long denunciaId, InvestigacaoDenunciaDto dto)
+        [SwaggerResponse(201, "Investigação criada com sucesso", typeof(InvestigacaoDenunciaDto))]
+        [ProducesResponseType(typeof(InvestigacaoDenunciaDto), 201)]
+        public async Task<ActionResult<InvestigacaoDenunciaDto>> AdicionarInvestigacao(long denunciaId, InvestigacaoDenunciaDto dto)
         {
             var id = await _denunciaService.AdicionarInvestigacaoAsync(denunciaId, dto);
-            return Ok(id);
+            var investigacaoCriada = (await _denunciaService.GetInvestigacoesAsync(denunciaId)).FirstOrDefault(x => x.Id == id);
+            return CreatedAtAction(nameof(GetInvestigacoes), new { denunciaId }, investigacaoCriada);
         }
     }
 }

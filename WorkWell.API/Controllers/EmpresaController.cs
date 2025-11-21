@@ -73,14 +73,15 @@ namespace WorkWell.API.Controllers
         /// <returns>ID da empresa criada</returns>
         [HttpPost]
         [SwaggerRequestExample(typeof(EmpresaDto), typeof(EmpresaDtoExample))]
-        [SwaggerResponse(201, "Empresa criada com sucesso", typeof(long))]
+        [SwaggerResponse(201, "Empresa criada com sucesso", typeof(EmpresaDto))]
         [SwaggerResponse(400, "Dados inválidos")]
-        [ProducesResponseType(typeof(long), 201)]
+        [ProducesResponseType(typeof(EmpresaDto), 201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<long>> Create(EmpresaDto empresaDto)
+        public async Task<ActionResult<EmpresaDto>> Create(EmpresaDto empresaDto)
         {
             var id = await _empresaService.CreateAsync(empresaDto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var empresaCriada = await _empresaService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, empresaCriada);
         }
 
         /// <summary>

@@ -60,12 +60,13 @@ namespace WorkWell.API.Controllers
         /// </summary>
         [HttpPost]
         [SwaggerRequestExample(typeof(FuncionarioDto), typeof(FuncionarioDtoExample))]
-        [SwaggerResponse(201, "Funcionário criado com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 201)]
-        public async Task<ActionResult<long>> Create(FuncionarioDto funcionarioDto)
+        [SwaggerResponse(201, "Funcionário criado com sucesso", typeof(FuncionarioDto))]
+        [ProducesResponseType(typeof(FuncionarioDto), 201)]
+        public async Task<ActionResult<FuncionarioDto>> Create(FuncionarioDto funcionarioDto)
         {
             var id = await _funcionarioService.CreateAsync(funcionarioDto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var funcionarioCriado = await _funcionarioService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, funcionarioCriado);
         }
 
         /// <summary>

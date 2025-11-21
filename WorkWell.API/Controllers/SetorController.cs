@@ -51,12 +51,13 @@ namespace WorkWell.API.Controllers
 
         [HttpPost]
         [SwaggerRequestExample(typeof(SetorDto), typeof(SetorDtoExample))]
-        [SwaggerResponse(201, "Setor criado com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 201)]
-        public async Task<ActionResult<long>> Create(SetorDto setorDto)
+        [SwaggerResponse(201, "Setor criado com sucesso", typeof(SetorDto))]
+        [ProducesResponseType(typeof(SetorDto), 201)]
+        public async Task<ActionResult<SetorDto>> Create(SetorDto setorDto)
         {
             var id = await _setorService.CreateAsync(setorDto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var setorCriado = await _setorService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, setorCriado);
         }
 
         [HttpPut("{id:long}")]

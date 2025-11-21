@@ -48,12 +48,13 @@ namespace WorkWell.API.Controllers
 
         [HttpPost]
         [SwaggerRequestExample(typeof(MoodCheckDto), typeof(MoodCheckDtoExample))]
-        [SwaggerResponse(201, "Registro criado com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 201)]
-        public async Task<ActionResult<long>> Create(MoodCheckDto dto)
+        [SwaggerResponse(201, "Registro criado com sucesso", typeof(MoodCheckDto))]
+        [ProducesResponseType(typeof(MoodCheckDto), 201)]
+        public async Task<ActionResult<MoodCheckDto>> Create(MoodCheckDto dto)
         {
             var id = await _moodService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var registroCriado = await _moodService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, registroCriado);
         }
 
         [HttpPut("{id:long}")]

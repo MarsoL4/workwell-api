@@ -60,14 +60,15 @@ namespace WorkWell.API.Controllers
         /// </remarks>
         [HttpPost]
         [SwaggerRequestExample(typeof(AtividadeBemEstarDto), typeof(AtividadeBemEstarDtoExample))]
-        [SwaggerResponse(201, "Atividade criada com sucesso", typeof(long))]
+        [SwaggerResponse(201, "Atividade criada com sucesso", typeof(AtividadeBemEstarDto))]
         [SwaggerResponse(400, "Dados inválidos")]
-        [ProducesResponseType(typeof(long), 201)]
+        [ProducesResponseType(typeof(AtividadeBemEstarDto), 201)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<long>> Create(AtividadeBemEstarDto dto)
+        public async Task<ActionResult<AtividadeBemEstarDto>> Create(AtividadeBemEstarDto dto)
         {
             var id = await _atividadeService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            var atividadeCriada = await _atividadeService.GetByIdAsync(id);
+            return CreatedAtAction(nameof(GetById), new { id }, atividadeCriada);
         }
 
         /// <summary>
@@ -131,12 +132,13 @@ namespace WorkWell.API.Controllers
         /// </remarks>
         [HttpPost("{atividadeId:long}/participacoes")]
         [SwaggerRequestExample(typeof(ParticipacaoAtividadeDto), typeof(ParticipacaoAtividadeDtoExample))]
-        [SwaggerResponse(200, "Participação registrada com sucesso", typeof(long))]
-        [ProducesResponseType(typeof(long), 200)]
-        public async Task<ActionResult<long>> Participar(long atividadeId, ParticipacaoAtividadeDto dto)
+        [SwaggerResponse(200, "Participação registrada com sucesso", typeof(ParticipacaoAtividadeDto))]
+        [ProducesResponseType(typeof(ParticipacaoAtividadeDto), 200)]
+        public async Task<ActionResult<ParticipacaoAtividadeDto>> Participar(long atividadeId, ParticipacaoAtividadeDto dto)
         {
             var id = await _atividadeService.AdicionarParticipacaoAsync(atividadeId, dto);
-            return Ok(id);
+            var participacaoCriada = (await _atividadeService.GetParticipacoesAsync(atividadeId)).FirstOrDefault(x => x.Id == id);
+            return Ok(participacaoCriada);
         }
     }
 }
