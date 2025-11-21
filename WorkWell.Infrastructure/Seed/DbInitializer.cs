@@ -47,7 +47,8 @@ namespace WorkWell.Infrastructure.Seed
             var setorRh = new Setor { Nome = "RH", Empresa = empresa };
             var setorTI = new Setor { Nome = "TI", Empresa = empresa };
             var setorFin = new Setor { Nome = "Financeiro", Empresa = empresa };
-            context.Setores.AddRange(setorRh, setorTI, setorFin);
+            var setorPsico = new Setor { Nome = "Psicologia", Empresa = empresa };
+            context.Setores.AddRange(setorRh, setorTI, setorFin, setorPsico);
             context.SaveChanges();
 
             // --- Funcionários (Admin, RH, Psicólogo, Comum)
@@ -79,7 +80,7 @@ namespace WorkWell.Infrastructure.Seed
                 TokenEmpresa = empresa.TokenAcesso,
                 Cargo = Cargo.Psicologo,
                 Ativo = true,
-                Setor = setorRh,
+                Setor = setorPsico,
                 Crp = "06/123456"
             };
             var func = new Funcionario
