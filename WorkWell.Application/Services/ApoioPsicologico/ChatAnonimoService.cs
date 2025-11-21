@@ -41,8 +41,15 @@ namespace WorkWell.Application.Services.ApoioPsicologico
 
         public async Task UpdateAsync(ChatAnonimoDto dto)
         {
-            var entity = FromDto(dto);
-            await _repo.UpdateAsync(entity);
+            // Buscar entidade existente para evitar conflito de tracking
+            var existente = await _repo.GetByIdAsync(dto.Id);
+            if (existente == null) throw new KeyNotFoundException("Chat não encontrado.");
+            existente.RemetenteId = dto.RemetenteId;
+            existente.PsicologoId = dto.PsicologoId;
+            existente.Mensagem = dto.Mensagem;
+            existente.Anonimo = dto.Anonimo;
+            // Não atualizar DataEnvio!
+            await _repo.UpdateAsync(existente);
         }
 
         public async Task DeleteAsync(long id)

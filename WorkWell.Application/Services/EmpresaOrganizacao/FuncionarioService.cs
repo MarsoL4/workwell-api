@@ -55,8 +55,20 @@ namespace WorkWell.Application.Services.EmpresaOrganizacao
 
         public async Task UpdateAsync(FuncionarioDto funcionarioDto)
         {
-            var funcionario = FromDto(funcionarioDto);
-            await _funcionarioRepository.UpdateAsync(funcionario);
+            // Busca a entidade existente para evitar erro de tracking duplicado no EF Core
+            var funcionarioExistente = await _funcionarioRepository.GetByIdAsync(funcionarioDto.Id);
+            if (funcionarioExistente == null)
+                throw new KeyNotFoundException("Funcionário não encontrado.");
+
+            funcionarioExistente.Nome = funcionarioDto.Nome;
+            funcionarioExistente.Email = funcionarioDto.Email;
+            funcionarioExistente.Senha = funcionarioDto.Senha;
+            funcionarioExistente.TokenEmpresa = funcionarioDto.TokenEmpresa;
+            funcionarioExistente.Cargo = funcionarioDto.Cargo;
+            funcionarioExistente.Ativo = funcionarioDto.Ativo;
+            funcionarioExistente.SetorId = funcionarioDto.SetorId;
+
+            await _funcionarioRepository.UpdateAsync(funcionarioExistente);
         }
 
         public async Task DeleteAsync(long id)
@@ -71,6 +83,8 @@ namespace WorkWell.Application.Services.EmpresaOrganizacao
                 Id = funcionario.Id,
                 Nome = funcionario.Nome,
                 Email = funcionario.Email,
+                Senha = funcionario.Senha,
+                TokenEmpresa = funcionario.TokenEmpresa,
                 Cargo = funcionario.Cargo,
                 Ativo = funcionario.Ativo,
                 SetorId = funcionario.SetorId
@@ -84,12 +98,11 @@ namespace WorkWell.Application.Services.EmpresaOrganizacao
                 Id = dto.Id,
                 Nome = dto.Nome,
                 Email = dto.Email,
+                Senha = dto.Senha,
+                TokenEmpresa = dto.TokenEmpresa,
                 Cargo = dto.Cargo,
                 Ativo = dto.Ativo,
-                SetorId = dto.SetorId,
-                // Para manter legado de senha/token vazio (ajustar depois conforme autenticação):
-                Senha = string.Empty,
-                TokenEmpresa = string.Empty
+                SetorId = dto.SetorId
             };
         }
     }

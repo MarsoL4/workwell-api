@@ -38,8 +38,16 @@ namespace WorkWell.Application.Services.ApoioPsicologico
 
         public async Task UpdateAsync(ConsultaPsicologicaDto dto)
         {
-            var entity = FromDto(dto);
-            await _repo.UpdateAsync(entity);
+            // Buscar entidade existente para evitar conflito de tracking
+            var existente = await _repo.GetByIdAsync(dto.Id);
+            if (existente == null) throw new KeyNotFoundException("Consulta não encontrada.");
+            existente.FuncionarioId = dto.FuncionarioId;
+            existente.PsicologoId = dto.PsicologoId;
+            existente.DataConsulta = dto.DataConsulta;
+            existente.Tipo = dto.Tipo;
+            existente.Status = dto.Status;
+            existente.AnotacoesSigilosas = dto.AnotacoesSigilosas;
+            await _repo.UpdateAsync(existente);
         }
 
         public async Task DeleteAsync(long id)

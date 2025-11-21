@@ -41,8 +41,15 @@ namespace WorkWell.Application.Services.AvaliacoesEmocionais
 
         public async Task UpdateAsync(PerfilEmocionalDto dto)
         {
-            var entity = FromDto(dto);
-            await _repo.UpdateAsync(entity);
+            // Para evitar tracking duplicado/erro, busque e atualize a instância existente:
+            var existente = await _repo.GetByIdAsync(dto.Id);
+            if (existente == null) throw new KeyNotFoundException("PerfilEmocional não encontrado.");
+            existente.FuncionarioId = dto.FuncionarioId;
+            existente.HumorInicial = dto.HumorInicial;
+            existente.Rotina = dto.Rotina;
+            existente.PrincipaisEstressores = dto.PrincipaisEstressores;
+            // Não atualizar DataCriacao!
+            await _repo.UpdateAsync(existente);
         }
 
         public async Task DeleteAsync(long id)

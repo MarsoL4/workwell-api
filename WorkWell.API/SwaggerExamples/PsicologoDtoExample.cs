@@ -12,6 +12,8 @@ namespace WorkWell.API.SwaggerExamples
             {
                 Nome = "Dra. Helena Alves",
                 Email = "helena.alves@futurework.com",
+                Senha = "psic123",
+                TokenEmpresa = "token-ftw-001",
                 Crp = "06/123456",
                 Ativo = true,
                 SetorId = 1 // RH
