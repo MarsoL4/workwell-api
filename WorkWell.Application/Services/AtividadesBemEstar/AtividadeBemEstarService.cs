@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using WorkWell.Application.DTOs.AtividadesBemEstar;
 using WorkWell.Domain.Entities.AtividadesBemEstar;
-using WorkWell.Domain.Extensions;
 using WorkWell.Domain.Interfaces.AtividadesBemEstar;
 
 namespace WorkWell.Application.Services.AtividadesBemEstar
@@ -39,8 +38,18 @@ namespace WorkWell.Application.Services.AtividadesBemEstar
 
         public async Task UpdateAsync(AtividadeBemEstarDto dto)
         {
-            var entity = FromDto(dto);
-            await _atividadeRepo.UpdateAsync(entity);
+            var existente = await _atividadeRepo.GetByIdAsync(dto.Id);
+            if (existente == null) throw new KeyNotFoundException("Atividade não encontrada.");
+
+            existente.EmpresaId = dto.EmpresaId;
+            existente.Tipo = dto.Tipo;
+            existente.Titulo = dto.Titulo;
+            existente.Descricao = dto.Descricao;
+            existente.DataInicio = dto.DataInicio;
+            existente.DataFim = dto.DataFim;
+            existente.SetorAlvoId = dto.SetorAlvoId;
+
+            await _atividadeRepo.UpdateAsync(existente);
         }
 
         public async Task DeleteAsync(long id)
@@ -53,12 +62,11 @@ namespace WorkWell.Application.Services.AtividadesBemEstar
         {
             var entity = FromDto(dto);
             entity.AtividadeId = atividadeId;
-            entity.DataParticipacao = DateTime.UtcNow.TruncateToMinutes();
+            entity.DataParticipacao = dto.DataParticipacao ?? DateTime.UtcNow;
             await _participacaoRepo.AddAsync(entity);
             return entity.Id;
         }
 
-        // Helpers
         private static AtividadeBemEstarDto ToDto(AtividadeBemEstar e) => new()
         {
             Id = e.Id,
@@ -98,7 +106,7 @@ namespace WorkWell.Application.Services.AtividadesBemEstar
             FuncionarioId = dto.FuncionarioId,
             AtividadeId = dto.AtividadeId,
             Participou = dto.Participou,
-            DataParticipacao = dto.DataParticipacao ?? DateTime.UtcNow.TruncateToMinutes()
+            DataParticipacao = dto.DataParticipacao ?? DateTime.UtcNow
         };
     }
 }

@@ -41,8 +41,15 @@ namespace WorkWell.Application.Services.AvaliacoesEmocionais
 
         public async Task UpdateAsync(AvaliacaoProfundaDto dto)
         {
-            var entity = FromDto(dto);
-            await _repo.UpdateAsync(entity);
+            // Buscar existente antes de atualizar (evita tracked entity error)
+            var existente = await _repo.GetByIdAsync(dto.Id);
+            if (existente == null) throw new KeyNotFoundException("Avaliação não encontrada.");
+            existente.FuncionarioId = dto.FuncionarioId;
+            existente.Gad7Score = dto.Gad7Score;
+            existente.Phq9Score = dto.Phq9Score;
+            existente.Interpretacao = dto.Interpretacao;
+            // NÃO atualiza DataRegistro
+            await _repo.UpdateAsync(existente);
         }
 
         public async Task DeleteAsync(long id)
