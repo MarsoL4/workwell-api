@@ -141,5 +141,43 @@ namespace WorkWell.API.Controllers
             var investigacaoCriada = (await _denunciaService.GetInvestigacoesAsync(denunciaId)).FirstOrDefault(x => x.Id == id);
             return CreatedAtAction(nameof(GetInvestigacoes), new { denunciaId }, investigacaoCriada);
         }
+
+        /// <summary>
+        /// Atualiza uma investigação sobre denúncia.
+        /// </summary>
+        [HttpPut("{denunciaId:long}/investigacoes/{investigacaoId:long}")]
+        [SwaggerRequestExample(typeof(InvestigacaoDenunciaDto), typeof(InvestigacaoDenunciaDtoExample))]
+        [SwaggerResponse(204, "Investigação atualizada com sucesso")]
+        [SwaggerResponse(400, "ID inconsistente")]
+        [SwaggerResponse(404, "Investigação não encontrada")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateInvestigacao(long denunciaId, long investigacaoId, InvestigacaoDenunciaDto dto)
+        {
+            if (investigacaoId != dto.Id)
+                return BadRequest(new { mensagem = "ID da investigação da URL e do objeto devem coincidir." });
+
+            // Service deve verificar se pertence à denúncia
+            var atualizou = await _denunciaService.UpdateInvestigacaoAsync(denunciaId, dto);
+            if (!atualizou)
+                return NotFound(new { mensagem = "Investigação não encontrada para a denúncia informada." });
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Remove uma investigação sobre denúncia.
+        /// </summary>
+        [HttpDelete("{denunciaId:long}/investigacoes/{investigacaoId:long}")]
+        [SwaggerResponse(204, "Investigação removida com sucesso")]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> DeleteInvestigacao(long denunciaId, long investigacaoId)
+        {
+            var removido = await _denunciaService.DeleteInvestigacaoAsync(denunciaId, investigacaoId);
+            if (!removido)
+                return NotFound(new { mensagem = "Investigação não encontrada para a denúncia informada." });
+            return NoContent();
+        }
     }
 }

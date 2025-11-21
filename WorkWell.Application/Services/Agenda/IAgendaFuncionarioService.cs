@@ -15,5 +15,8 @@ namespace WorkWell.Application.Services.Agenda
         // Itens da agenda
         Task<IEnumerable<ItemAgendaDto>> GetItensAsync(long agendaFuncionarioId);
         Task<long> AdicionarItemAsync(long agendaFuncionarioId, ItemAgendaDto dto);
+
+        Task<bool> UpdateItemAsync(long agendaFuncionarioId, ItemAgendaDto dto);
+        Task<bool> DeleteItemAsync(long agendaFuncionarioId, long itemId);
     }
 }

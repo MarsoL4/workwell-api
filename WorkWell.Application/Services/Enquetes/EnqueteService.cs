@@ -103,5 +103,26 @@ namespace WorkWell.Application.Services.Enquetes
             FuncionarioId = dto.FuncionarioId,
             Resposta = dto.Resposta
         };
+
+        public async Task<bool> UpdateRespostaAsync(long enqueteId, RespostaEnqueteDto dto)
+        {
+            var entity = await _respostaRepository.GetByIdAsync(dto.Id);
+            if (entity == null || entity.EnqueteId != enqueteId)
+                return false;
+            entity.FuncionarioId = dto.FuncionarioId;
+            entity.Resposta = dto.Resposta;
+            await _respostaRepository.UpdateAsync(entity);
+            return true;
+        }
+
+        public async Task<bool> DeleteRespostaAsync(long enqueteId, long respostaId)
+        {
+            var entity = await _respostaRepository.GetByIdAsync(respostaId);
+            if (entity == null || entity.EnqueteId != enqueteId)
+                return false;
+
+            await _respostaRepository.DeleteAsync(respostaId);
+            return true;
+        }
     }
 }

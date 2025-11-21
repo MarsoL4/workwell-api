@@ -67,6 +67,29 @@ namespace WorkWell.Application.Services.AtividadesBemEstar
             return entity.Id;
         }
 
+        public async Task<bool> UpdateParticipacaoAsync(long atividadeId, ParticipacaoAtividadeDto dto)
+        {
+            var entidade = await _participacaoRepo.GetByIdAsync(dto.Id);
+            if (entidade == null || entidade.AtividadeId != atividadeId)
+                return false;
+            entidade.FuncionarioId = dto.FuncionarioId;
+            entidade.Participou = dto.Participou;
+            entidade.DataParticipacao = dto.DataParticipacao ?? entidade.DataParticipacao;
+            await _participacaoRepo.UpdateAsync(entidade);
+            return true;
+        }
+
+        public async Task<bool> DeleteParticipacaoAsync(long atividadeId, long participacaoId)
+        {
+            var entidade = await _participacaoRepo.GetByIdAsync(participacaoId);
+            if (entidade == null || entidade.AtividadeId != atividadeId)
+                return false;
+
+            await _participacaoRepo.DeleteAsync(participacaoId);
+            return true;
+        }
+
+        // Helpers DTO/Entity
         private static AtividadeBemEstarDto ToDto(AtividadeBemEstar e) => new()
         {
             Id = e.Id,

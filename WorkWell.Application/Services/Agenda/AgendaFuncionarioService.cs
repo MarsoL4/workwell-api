@@ -64,6 +64,28 @@ namespace WorkWell.Application.Services.Agenda
             return item.Id;
         }
 
+        public async Task<bool> UpdateItemAsync(long agendaFuncionarioId, ItemAgendaDto dto)
+        {
+            var item = await _itemRepository.GetByIdAsync(dto.Id);
+            if (item == null || item.AgendaFuncionarioId != agendaFuncionarioId)
+                return false;
+            // Atualiza apenas os campos possíveis
+            item.Tipo = dto.Tipo;
+            item.Titulo = dto.Titulo;
+            item.Horario = dto.Horario;
+            await _itemRepository.UpdateAsync(item);
+            return true;
+        }
+
+        public async Task<bool> DeleteItemAsync(long agendaFuncionarioId, long itemId)
+        {
+            var item = await _itemRepository.GetByIdAsync(itemId);
+            if (item == null || item.AgendaFuncionarioId != agendaFuncionarioId)
+                return false;
+            await _itemRepository.DeleteAsync(itemId);
+            return true;
+        }
+
         // Converters
         private static AgendaFuncionarioDto ToDto(AgendaFuncionario entidade) =>
             new()

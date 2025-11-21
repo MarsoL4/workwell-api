@@ -122,5 +122,28 @@ namespace WorkWell.Application.Services.OmbudMind
             MedidasAdotadas = dto.MedidasAdotadas,
             Concluida = dto.Concluida
         };
+
+        public async Task<bool> UpdateInvestigacaoAsync(long denunciaId, InvestigacaoDenunciaDto dto)
+        {
+            var entity = await _investigacaoRepo.GetByIdAsync(dto.Id);
+            if (entity == null || entity.DenunciaId != denunciaId)
+                return false;
+            entity.EquipeResponsavel = dto.EquipeResponsavel;
+            entity.DataInicio = dto.DataInicio;
+            entity.DataFim = dto.DataFim;
+            entity.MedidasAdotadas = dto.MedidasAdotadas;
+            entity.Concluida = dto.Concluida;
+            await _investigacaoRepo.UpdateAsync(entity);
+            return true;
+        }
+
+        public async Task<bool> DeleteInvestigacaoAsync(long denunciaId, long investigacaoId)
+        {
+            var entity = await _investigacaoRepo.GetByIdAsync(investigacaoId);
+            if (entity == null || entity.DenunciaId != denunciaId)
+                return false;
+            await _investigacaoRepo.DeleteAsync(investigacaoId);
+            return true;
+        }
     }
 }

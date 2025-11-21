@@ -121,5 +121,42 @@ namespace WorkWell.API.Controllers
             var respostaCriada = (await _enqueteService.GetRespostasAsync(enqueteId)).FirstOrDefault(r => r.Id == id);
             return CreatedAtAction(nameof(GetRespostas), new { enqueteId }, respostaCriada);
         }
+
+        /// <summary>
+        /// Atualiza uma resposta de enquete.
+        /// </summary>
+        [HttpPut("{enqueteId:long}/respostas/{respostaId:long}")]
+        [SwaggerRequestExample(typeof(RespostaEnqueteDto), typeof(RespostaEnqueteDtoExample))]
+        [SwaggerResponse(204, "Resposta atualizada com sucesso")]
+        [SwaggerResponse(400, "ID inconsistente")]
+        [SwaggerResponse(404, "Resposta não encontrada")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateResposta(long enqueteId, long respostaId, RespostaEnqueteDto dto)
+        {
+            if (respostaId != dto.Id)
+                return BadRequest(new { mensagem = "ID da resposta da URL e do objeto devem coincidir." });
+
+            var atualizou = await _enqueteService.UpdateRespostaAsync(enqueteId, dto);
+            if (!atualizou)
+                return NotFound(new { mensagem = "Resposta não encontrada para a enquete informada." });
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Remove uma resposta de enquete.
+        /// </summary>
+        [HttpDelete("{enqueteId:long}/respostas/{respostaId:long}")]
+        [SwaggerResponse(204, "Resposta removida com sucesso")]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> DeleteResposta(long enqueteId, long respostaId)
+        {
+            var removido = await _enqueteService.DeleteRespostaAsync(enqueteId, respostaId);
+            if (!removido)
+                return NotFound(new { mensagem = "Resposta não encontrada para a enquete informada." });
+            return NoContent();
+        }
     }
 }

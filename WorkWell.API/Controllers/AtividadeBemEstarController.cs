@@ -140,5 +140,41 @@ namespace WorkWell.API.Controllers
             var participacaoCriada = (await _atividadeService.GetParticipacoesAsync(atividadeId)).FirstOrDefault(x => x.Id == id);
             return Ok(participacaoCriada);
         }
+
+        /// <summary>
+        /// Atualiza a participação de um funcionário em uma atividade.
+        /// </summary>
+        [HttpPut("{atividadeId:long}/participacoes/{participacaoId:long}")]
+        [SwaggerRequestExample(typeof(ParticipacaoAtividadeDto), typeof(ParticipacaoAtividadeDtoExample))]
+        [SwaggerResponse(204, "Participação atualizada com sucesso")]
+        [SwaggerResponse(400, "ID inconsistente")]
+        [SwaggerResponse(404, "Participação não encontrada")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateParticipacao(long atividadeId, long participacaoId, ParticipacaoAtividadeDto dto)
+        {
+            if (participacaoId != dto.Id)
+                return BadRequest(new { mensagem = "ID da participação (URL e objeto) devem coincidir." });
+
+            var atualizado = await _atividadeService.UpdateParticipacaoAsync(atividadeId, dto);
+            if (!atualizado)
+                return NotFound(new { mensagem = "Participação não encontrada para a atividade informada." });
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Remove a participação de um funcionário em uma atividade.
+        /// </summary>
+        [HttpDelete("{atividadeId:long}/participacoes/{participacaoId:long}")]
+        [SwaggerResponse(204, "Participação removida com sucesso")]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> DeleteParticipacao(long atividadeId, long participacaoId)
+        {
+            var removido = await _atividadeService.DeleteParticipacaoAsync(atividadeId, participacaoId);
+            if (!removido)
+                return NotFound(new { mensagem = "Participação não encontrada para a atividade informada." });
+            return NoContent();
+        }
     }
 }

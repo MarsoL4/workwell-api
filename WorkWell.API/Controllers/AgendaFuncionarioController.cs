@@ -131,5 +131,42 @@ namespace WorkWell.API.Controllers
             var itemCriado = (await _agendaService.GetItensAsync(agendaId)).FirstOrDefault(i => i.Id == id);
             return Ok(itemCriado);
         }
+
+        /// <summary>
+        /// Atualiza um item da agenda.
+        /// </summary>
+        [HttpPut("{agendaId:long}/itens/{itemId:long}")]
+        [SwaggerRequestExample(typeof(ItemAgendaDto), typeof(ItemAgendaDtoExample))]
+        [SwaggerResponse(204, "Item da agenda atualizado com sucesso")]
+        [SwaggerResponse(400, "IDs inconsistentes")]
+        [SwaggerResponse(404, "Item não encontrado")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateItem(long agendaId, long itemId, ItemAgendaDto dto)
+        {
+            if (itemId != dto.Id)
+                return BadRequest(new { mensagem = "ID do item da URL e do objeto devem coincidir." });
+
+            // Service verifica se pertence à agenda
+            var atualizou = await _agendaService.UpdateItemAsync(agendaId, dto);
+            if (!atualizou)
+                return NotFound(new { mensagem = "Item da agenda não encontrado para a agenda informada." });
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Remove um item da agenda.
+        /// </summary>
+        [HttpDelete("{agendaId:long}/itens/{itemId:long}")]
+        [SwaggerResponse(204, "Item da agenda removido com sucesso")]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> DeleteItem(long agendaId, long itemId)
+        {
+            var removeu = await _agendaService.DeleteItemAsync(agendaId, itemId);
+            if (!removeu)
+                return NotFound(new { mensagem = "Item da agenda não encontrado para a agenda informada." });
+            return NoContent();
+        }
     }
 }

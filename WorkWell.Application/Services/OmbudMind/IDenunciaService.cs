@@ -16,5 +16,8 @@ namespace WorkWell.Application.Services.OmbudMind
         // Investigação
         Task<IEnumerable<InvestigacaoDenunciaDto>> GetInvestigacoesAsync(long denunciaId);
         Task<long> AdicionarInvestigacaoAsync(long denunciaId, InvestigacaoDenunciaDto dto);
+
+        Task<bool> UpdateInvestigacaoAsync(long denunciaId, InvestigacaoDenunciaDto dto);
+        Task<bool> DeleteInvestigacaoAsync(long denunciaId, long investigacaoId);
     }
 }

@@ -12,7 +12,11 @@ namespace WorkWell.Application.Services.AtividadesBemEstar
         Task UpdateAsync(AtividadeBemEstarDto dto);
         Task DeleteAsync(long id);
 
+        // Participações
         Task<IEnumerable<ParticipacaoAtividadeDto>> GetParticipacoesAsync(long atividadeId);
         Task<long> AdicionarParticipacaoAsync(long atividadeId, ParticipacaoAtividadeDto dto);
+
+        Task<bool> UpdateParticipacaoAsync(long atividadeId, ParticipacaoAtividadeDto dto);
+        Task<bool> DeleteParticipacaoAsync(long atividadeId, long participacaoId);
     }
 }
